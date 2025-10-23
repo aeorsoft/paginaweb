@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import AppProviders from "./providers";
 import { MainNav } from "@/components/navigation/main-nav";
 import { SiteFooter } from "@/components/navigation/site-footer";
+import { Chatbot } from "@/components/chat/chatbot";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,6 +45,7 @@ export default function RootLayout({
             </main>
             <SiteFooter />
           </div>
+          <Chatbot />
         </AppProviders>
       </body>
     </html>

@@ -15,12 +15,20 @@ export function SiteFooter() {
             GitHub
           </a>
           <a
-            href={siteConfig.links.docs}
+            href={siteConfig.links.portfolio}
             target="_blank"
             rel="noreferrer"
             className="transition-colors hover:text-black dark:hover:text-white"
           >
-            Documentation
+            Portfolio
+          </a>
+          <a
+            href={siteConfig.links.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-black dark:hover:text-white"
+          >
+            LinkedIn
           </a>
         </div>
       </div>

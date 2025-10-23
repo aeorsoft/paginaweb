@@ -43,7 +43,7 @@ export const apiClient = {
     return defaultClient.delete(resolveUrl(url), options).json<T>();
   },
   extend(createOptions?: Options) {
-    return defaultClient.extend(createOptions);
+    return defaultClient.extend(createOptions || {});
   },
 };
 

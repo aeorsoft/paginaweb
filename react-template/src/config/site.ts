@@ -1,11 +1,12 @@
 export const siteConfig = {
-  name: "Bulletproof Next Template",
+  name: "Alex Osorio - Desarrollador de Software",
   description:
-    "An example Next.js 15 project structured with the Bulletproof React architecture.",
-  contactEmail: "team@example.com",
+    "Desarrollador Full Stack especializado en React, Next.js y tecnologías modernas. Creando soluciones innovadoras para el futuro digital.",
+  contactEmail: "alex@example.com",
   links: {
-    github: "https://github.com/your-org/your-repo",
-    docs: "https://alan2207.github.io/bulletproof-react/",
+    github: "https://github.com/alex-osorio",
+    linkedin: "https://linkedin.com/in/alex-osorio",
+    portfolio: "https://alex-osorio.dev",
   },
 } as const;
 

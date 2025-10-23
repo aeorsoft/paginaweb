@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
 import { useTheme } from "@/lib/theme";
 import { useFeatureFlag } from "@/lib/feature-flags";
@@ -16,6 +17,11 @@ export function MainNav() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const { enabled: experimentalTasks } = useFeatureFlag("experimentalTasks");
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   return (
     <nav className="flex items-center justify-between gap-6 px-4 py-3">
@@ -47,7 +53,7 @@ export function MainNav() {
           onClick={toggleTheme}
           className="text-xs font-medium uppercase tracking-wide"
         >
-          {theme === "dark" ? "Light" : "Dark"} mode
+          {isHydrated ? (theme === "dark" ? "Light" : "Dark") : "Dark"} mode
         </button>
       </div>
     </nav>
