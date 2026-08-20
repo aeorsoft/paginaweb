@@ -1,0 +1,6 @@
+services:
+  web:
+    image: aeor06/webaeorsoft:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
