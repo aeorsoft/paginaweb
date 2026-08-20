@@ -2,7 +2,12 @@ import { z } from "zod";
 import "dotenv/config";
 
 const EnvSchema = z.object({
-  NEXT_PUBLIC_API_URL: z.string().url().optional(),
+  NEXT_PUBLIC_API_URL: z
+    .string()
+    .url()
+    .optional()
+    .or(z.literal(""))
+    .transform((value) => (value ? value : undefined)),
 });
 
 export const env = (() => {

@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
-
 export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json();
@@ -13,13 +9,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
+    const apiKey = process.env.OPENAI_API_KEY;
+
     // Si no hay API key, usar respuestas predefinidas
-    if (!process.env.OPENAI_API_KEY) {
+    if (!apiKey) {
       return NextResponse.json({ 
         response: getFallbackResponse(message),
         isFallback: true 
       });
     }
+
+    const openai = new OpenAI({ apiKey });
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
