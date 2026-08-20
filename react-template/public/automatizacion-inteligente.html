@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingeniería de la Automatización Inteligente — RPA, APIs, IA y Agentes Autónomos</title>
+<meta name="description" content="De los procesos manuales a ecosistemas integrados: RPA, APIs, IA, Low-Code y arquitecturas orientadas a eventos para transformar procesos empresariales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F5F7;
+  --panel:#FFFFFF;
+  --ink:#0F1B26;
+  --ink-soft:#42535F;
+  --line:#D5DDE3;
+  --blue:#1F4FD8;
+  --blue-deep:#12308F;
+  --amber:#E8930C;
+  --green:#0E9F6E;
+  --red:#D64545;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Public Sans',system-ui,sans-serif;
+  --radius:14px;
+  --maxw:1160px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;font-size:16.5px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue);color:#fff}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:inline-flex;align-items:center;gap:.6em}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--blue)}
+h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.12;letter-spacing:-.01em;margin:.55em 0 .5em}
+section{padding:92px 0;position:relative}
+.lead{color:var(--ink-soft);max-width:64ch}
+
+/* ---------- barra de progreso + nav ---------- */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--amber));z-index:200;transition:width .1s linear}
+nav{position:sticky;top:0;z-index:100;background:rgba(242,245,247,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.brand{font-family:var(--mono);font-size:.8rem;font-weight:600;letter-spacing:.06em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px}
+.brand .pulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(14,159,110,.5);animation:beat 2.2s infinite}
+@keyframes beat{0%{box-shadow:0 0 0 0 rgba(14,159,110,.5)}70%{box-shadow:0 0 0 9px rgba(14,159,110,0)}100%{box-shadow:0 0 0 0 rgba(14,159,110,0)}}
+.brand b{color:var(--blue)}
+.navlinks{display:flex;gap:22px;align-items:center}
+.navlinks a{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+.navlinks a:hover,.navlinks a:focus-visible{color:var(--blue);border-bottom-color:var(--blue)}
+.navlinks a.cta{border:1px solid var(--blue);color:var(--blue);border-radius:8px;padding:7px 14px}
+.navlinks a.cta:hover{background:var(--blue);color:#fff}
+@media(max-width:860px){.navlinks a:not(.cta){display:none}}
+
+/* ---------- hero con canvas ---------- */
+header.hero{position:relative;padding:96px 0 70px;border-bottom:1px solid var(--line);overflow:hidden;background:var(--paper)}
+#net{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero .wrap{position:relative;z-index:2}
+.hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(2.3rem,5.6vw,4.2rem);line-height:1.02;letter-spacing:-.022em;max-width:19ch;margin:.5em 0 .45em}
+.hero h1 .hl{color:var(--blue)}
+.hero h1 .type-cursor{display:inline-block;width:.55ch;background:var(--amber);height:.85em;transform:translateY(.1em);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero p.sub{font-size:clamp(1rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:58ch;margin-bottom:30px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;border:1px solid var(--line);background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;color:var(--ink-soft)}
+.tag.ia{border-color:rgba(232,147,12,.5);color:var(--amber)}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border-radius:10px;font-weight:600;transition:transform .15s,box-shadow .15s;display:inline-flex;align-items:center;gap:8px}
+.btn.primary{background:var(--blue);color:#fff;box-shadow:0 10px 26px -12px rgba(31,79,216,.55)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 16px 32px -12px rgba(31,79,216,.6)}
+.btn.ghost{border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.85)}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ---------- pipeline hero ---------- */
+.pipeline{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px 22px;overflow-x:auto;box-shadow:0 18px 44px -26px rgba(15,27,38,.35);backdrop-filter:blur(4px)}
+.pipeline .pl-title{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);display:flex;justify-content:space-between;gap:16px;margin-bottom:18px}
+.pipeline .pl-title .ok{color:var(--green)}
+.flowline{display:flex;align-items:stretch;min-width:960px}
+.node{flex:1;border:1px solid var(--line);border-radius:10px;background:#FBFCFD;padding:12px 10px;text-align:center;position:relative;transition:border-color .25s,box-shadow .25s,transform .25s}
+.node .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);display:block}
+.node .v{font-weight:700;font-size:.84rem;line-height:1.25;display:block;margin-top:3px}
+.node.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,79,216,.14);transform:translateY(-2px)}
+.node.on .k{color:var(--blue)}
+.node.ia-node.on{border-color:var(--amber);box-shadow:0 0 0 3px rgba(232,147,12,.16)}
+.node.ia-node.on .k{color:var(--amber)}
+.link{width:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;position:relative}
+.link::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:var(--line)}
+.link .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);position:absolute;top:50%;left:0;transform:translate(-4px,-50%);opacity:0}
+.link.on .dot{animation:travel .55s linear forwards}
+@keyframes travel{0%{left:0;opacity:1}100%{left:100%;opacity:1}}
+.pl-caption{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);margin-top:16px}
+
+/* ---------- marquee logos ---------- */
+.toolbelt{border-bottom:1px solid var(--line);background:var(--panel);padding:26px 0;overflow:hidden}
+.toolbelt .tb-label{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-bottom:18px}
+.marquee{display:flex;gap:0;width:max-content;animation:scrollx 38s linear infinite}
+.marquee:hover{animation-play-state:paused}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+.mq-track{display:flex;gap:44px;padding:0 22px;align-items:center}
+.logo-item{display:flex;align-items:center;gap:10px;filter:grayscale(1);opacity:.62;transition:filter .25s,opacity .25s,transform .25s}
+.logo-item:hover{filter:none;opacity:1;transform:translateY(-2px)}
+.logo-item img{height:30px;width:30px;object-fit:contain}
+.logo-item .fb{height:30px;width:30px;border-radius:8px;background:var(--blue);color:#fff;font-family:var(--mono);font-weight:600;font-size:.66rem;display:none;align-items:center;justify-content:center}
+.logo-item.nofimg img{display:none}
+.logo-item.nofimg .fb{display:flex}
+.logo-item span.nm{font-family:var(--mono);font-size:.74rem;color:var(--ink);white-space:nowrap}
+@media(prefers-reduced-motion:reduce){.marquee{animation:none;width:auto;flex-wrap:wrap;justify-content:center}}
+
+/* ---------- stats ---------- */
+.stats{background:var(--panel);border-bottom:1px solid var(--line);padding:56px 0}
+.stats .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:860px){.stats .grid{grid-template-columns:repeat(2,1fr)}}
+.stat{border-left:3px solid var(--blue);padding:6px 0 6px 18px}
+.stat.amber{border-color:var(--amber)}
+.stat .num{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,4vw,2.9rem);line-height:1;letter-spacing:-.02em}
+.stat .num small{font-size:.55em;font-weight:700}
+.stat .lbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+
+/* ---------- tesis ---------- */
+.thesis{background:var(--ink);color:#EAF0F5;position:relative;overflow:hidden}
+.thesis::before{content:"";position:absolute;inset:-44px;background-image:linear-gradient(rgba(127,164,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(127,164,255,.07) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 30% 40%,#000 30%,transparent 75%);animation:gridpan 14s linear infinite}
+@keyframes gridpan{to{transform:translate(44px,44px)}}
+.thesis::after{content:"";position:absolute;top:-40%;left:-20%;width:55%;height:180%;background:radial-gradient(closest-side,rgba(127,164,255,.13),transparent 70%);animation:drift 11s ease-in-out infinite alternate;pointer-events:none}
+@keyframes drift{to{transform:translateX(120%)}}
+.thesis .wrap{position:relative}
+.thesis blockquote{font-family:var(--disp);font-weight:600;font-size:clamp(1.4rem,3vw,2.15rem);line-height:1.25;letter-spacing:-.01em;max-width:26ch}
+.thesis blockquote em{font-style:normal;color:#7FA4FF}
+.thesis .who{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:#93A6B5;margin-top:22px;text-transform:uppercase}
+
+/* ---------- módulos ---------- */
+#temas{overflow:hidden}
+#temas .bg-dots{position:absolute;inset:-80px;background-image:radial-gradient(rgba(31,79,216,.16) 1.4px,transparent 1.4px);background-size:30px 30px;transform:translate(calc(var(--mx,0)*22px),calc(var(--my,0)*22px));transition:transform .35s ease-out;pointer-events:none;mask-image:radial-gradient(ellipse at 78% 18%,#000 12%,transparent 62%)}
+#temas .bg-ring{position:absolute;right:-160px;top:-160px;width:480px;height:480px;border:1.5px dashed rgba(31,79,216,.28);border-radius:50%;animation:spin 42s linear infinite;pointer-events:none}
+#temas .bg-ring::after{content:"";position:absolute;inset:60px;border:1.5px dashed rgba(232,147,12,.3);border-radius:50%;animation:spin 28s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+#temas .wrap{position:relative;z-index:2}
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+@media(max-width:860px){.mod-grid{grid-template-columns:1fr}}
+details.mod{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .2s,box-shadow .2s}
+details.mod:hover{box-shadow:0 12px 30px -22px rgba(15,27,38,.35)}
+details.mod[open]{border-color:var(--blue)}
+details.mod summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;user-select:none}
+details.mod summary::-webkit-details-marker{display:none}
+details.mod summary:hover{background:#F7FAFC}
+.mod-ic{flex:0 0 40px;height:40px;border-radius:10px;background:rgba(31,79,216,.08);display:flex;align-items:center;justify-content:center;color:var(--blue)}
+.mod-ic svg{width:20px;height:20px}
+details.mod[open] .mod-ic{background:var(--blue);color:#fff}
+.mod-hd{flex:1}
+.mod-num{font-family:var(--mono);font-size:.66rem;font-weight:600;color:var(--blue);letter-spacing:.1em;display:block}
+.mod-name{font-family:var(--disp);font-weight:700;font-size:1.02rem;line-height:1.3}
+.mod-plus{font-family:var(--mono);color:var(--ink-soft);font-size:1.1rem;transition:transform .2s}
+details.mod[open] .mod-plus{transform:rotate(45deg);color:var(--blue)}
+.mod-body{padding:0 20px 20px 20px;border-top:1px dashed var(--line)}
+.mod-body p{color:var(--ink-soft);font-size:.92rem;margin:14px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--mono);font-size:.7rem;background:#EEF3F7;border:1px solid var(--line);padding:4px 9px;border-radius:6px;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip img{width:13px;height:13px}
+.chip.hot{background:rgba(232,147,12,.09);border-color:rgba(232,147,12,.4);color:#9A6206}
+
+/* ---------- simulador de flujos ---------- */
+.flows{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.flows::before{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(90deg,transparent 0 118px,rgba(31,79,216,.06) 118px 120px),
+  repeating-linear-gradient(0deg,transparent 0 118px,rgba(31,79,216,.06) 118px 120px);pointer-events:none}
+.flows::after{content:"";position:absolute;left:0;right:0;height:120px;top:0;background:linear-gradient(180deg,transparent,rgba(31,79,216,.09),transparent);animation:scanline 7s linear infinite;pointer-events:none}
+@keyframes scanline{from{transform:translateY(-140px)}to{transform:translateY(110vh)}}
+.flows .wrap{position:relative;z-index:2}
+.flowcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px 24px 20px;margin-top:20px;transition:box-shadow .25s}
+.flowcard:hover{box-shadow:0 16px 40px -28px rgba(15,27,38,.4)}
+.fc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.flowcard h3{font-family:var(--disp);font-weight:700;font-size:1.1rem;margin-bottom:4px}
+.flowcard .ctx{font-size:.88rem;color:var(--ink-soft);margin-bottom:16px;max-width:60ch}
+.runbtn{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s,transform .15s;flex:0 0 auto}
+.runbtn:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.runbtn:disabled{background:#9AACB9;cursor:wait;transform:none}
+.steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem}
+.step{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 11px;white-space:nowrap;transition:all .25s;position:relative}
+.step.ia{background:rgba(232,147,12,.1);border-color:rgba(232,147,12,.45);color:#8A5806;font-weight:600}
+.step.db{background:rgba(14,159,110,.08);border-color:rgba(14,159,110,.4);color:#0A7A55;font-weight:600}
+.step.running{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,79,216,.18);transform:translateY(-2px)}
+.step.done::after{content:"✓";position:absolute;top:-8px;right:-6px;background:var(--green);color:#fff;font-size:.6rem;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.arr{color:var(--blue);font-weight:600}
+.term{margin-top:16px;background:#0F1B26;border-radius:10px;padding:14px 16px;font-family:var(--mono);font-size:.72rem;color:#9FE8C7;max-height:0;overflow:hidden;transition:max-height .4s ease;line-height:1.7}
+.term.open{max-height:220px;overflow-y:auto}
+.term .ln{color:#B9CBD6}
+.term .ln.ia{color:#F5C26B}
+.term .ln.ok{color:#7FE0AE}
+.term .ln.info{color:#8FB6FF}
+.rule{margin-top:36px;border-left:4px solid var(--amber);background:var(--paper);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px}
+.rule .rk{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-weight:600}
+.rule p{margin-top:6px;font-weight:500}
+
+/* ---------- comparador RPA vs API ---------- */
+.versus{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.versus{grid-template-columns:1fr}}
+.vcard{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:24px}
+.vcard.win{border-color:var(--green);background:rgba(14,159,110,.04)}
+.vcard h4{font-family:var(--disp);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.vcard .badge{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.vcard.win .badge{background:var(--green);color:#fff}
+.vcard:not(.win) .badge{background:#E3E9EE;color:var(--ink-soft)}
+.vcard ul{list-style:none}
+.vcard li{font-size:.88rem;color:var(--ink-soft);padding:6px 0 6px 24px;position:relative}
+.vcard li::before{content:"→";position:absolute;left:0;color:var(--blue);font-family:var(--mono)}
+.vcard.win li::before{content:"✓";color:var(--green)}
+
+/* ---------- bloques ---------- */
+#bloques{overflow:hidden}
+#bloques .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;pointer-events:none}
+#bloques .blob.b1{width:420px;height:420px;background:rgba(31,79,216,.16);top:-120px;left:-120px;animation:float1 16s ease-in-out infinite alternate}
+#bloques .blob.b2{width:360px;height:360px;background:rgba(232,147,12,.14);bottom:-140px;right:-100px;animation:float2 13s ease-in-out infinite alternate}
+#bloques .blob.b3{width:260px;height:260px;background:rgba(14,159,110,.12);top:40%;left:55%;animation:float1 19s ease-in-out infinite alternate-reverse}
+@keyframes float1{to{transform:translate(90px,60px) scale(1.15)}}
+@keyframes float2{to{transform:translate(-80px,-70px) scale(1.1)}}
+#bloques .wrap{position:relative;z-index:2}
+.blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+@media(max-width:860px){.blocks{grid-template-columns:1fr}}
+.block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;cursor:default}
+.block:hover{transform:translateY(-4px);box-shadow:0 20px 44px -26px rgba(15,27,38,.4)}
+.block::after{content:attr(data-n);position:absolute;right:14px;top:2px;font-family:var(--disp);font-weight:800;font-size:4.6rem;color:rgba(31,79,216,.07);line-height:1}
+.block .bk{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);font-weight:600}
+.block h3{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:10px 0 8px;line-height:1.25}
+.block p{font-size:.9rem;color:var(--ink-soft)}
+.block .bar{height:4px;border-radius:99px;background:#E7EDF2;margin-top:18px;overflow:hidden}
+.block .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+.block.in .bar i{width:var(--w)}
+
+/* ---------- proyecto ---------- */
+.proj{background:var(--ink);color:#E7EDF3;position:relative;overflow:hidden}
+.proj::before{content:"";position:absolute;inset:-26px;background-image:radial-gradient(rgba(127,164,255,.16) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(ellipse at 70% 20%,#000 20%,transparent 70%);animation:gridpan 18s linear infinite}
+.proj::after{content:"";position:absolute;top:-30%;left:-15%;width:40%;height:170%;background:radial-gradient(closest-side,rgba(232,147,12,.09),transparent 70%);animation:drift 14s ease-in-out infinite alternate;pointer-events:none}
+.proj .wrap{position:relative}
+.proj .eyebrow{color:#7FA4FF}.proj .eyebrow::before{background:#7FA4FF}
+.proj h2{color:#fff}.proj .lead{color:#A9BAC8}
+.proj-pipe{margin-top:38px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;counter-reset:ps}
+.pstep{background:#16242F;border:1px solid #2A3B49;border-radius:12px;padding:16px 14px;transition:transform .25s,border-color .25s;position:relative}
+.pstep:hover{transform:translateY(-3px);border-color:#4A6378}
+.pstep .n{font-family:var(--mono);font-size:.62rem;color:#7FA4FF;letter-spacing:.1em}
+.pstep .t{font-weight:600;font-size:.88rem;margin-top:5px;line-height:1.35}
+.pstep .d{font-size:.76rem;color:#8FA3B2;margin-top:6px;line-height:1.5}
+.pstep.ia{border-color:rgba(232,147,12,.55)}
+.pstep.ia .n{color:var(--amber)}
+.proj-note{font-family:var(--mono);font-size:.74rem;color:#8FA3B2;margin-top:26px;max-width:74ch}
+
+/* ---------- footer ---------- */
+footer{padding:48px 0;border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center}
+footer p{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft)}
+#toTop{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:12px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-size:1.1rem;box-shadow:0 14px 30px -12px rgba(31,79,216,.6);opacity:0;pointer-events:none;transition:opacity .3s,transform .2s;z-index:90}
+#toTop.show{opacity:1;pointer-events:auto}
+#toTop:hover{transform:translateY(-3px)}
+
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .link .dot,#net,.type-cursor,.flows::after,#bloques .blob,.thesis::after,.proj::after,#temas .bg-ring{display:none}
+  .thesis::before,.proj::before{animation:none}
+  #temas .bg-dots{transform:none;transition:none}
+  .node.on,.block:hover,.pstep:hover{transform:none}
+  html{scroll-behavior:auto}
+}
+a:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="pulse"></span>auto<b>·</b>inteligente</a>
+    <div class="navlinks">
+      <a href="/">← Sitio principal</a>
+      <a href="#temas">Temario</a>
+      <a href="#flujos">Simulador</a>
+      <a href="#bloques">La charla</a>
+      <a href="#proyecto" class="cta">Proyecto final</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <span class="eyebrow">Ingeniería de Sistemas</span>
+    <h1>Ingeniería de la <span class="hl" id="typed">Automatización Inteligente</span><span class="type-cursor"></span></h1>
+    <p class="sub">De los procesos manuales a ecosistemas integrados: RPA, APIs, Inteligencia Artificial, Low-Code y arquitecturas orientadas a eventos para transformar procesos empresariales.</p>
+    <div class="meta">
+      <span class="tag">RPA</span>
+      <span class="tag">APIs REST</span>
+      <span class="tag">n8n · Power Automate</span>
+      <span class="tag">PostgreSQL</span>
+      <span class="tag">Docker · CI/CD</span>
+      <span class="tag ia">LLMs · OCR · Agentes IA</span>
+    </div>
+    <div class="hero-actions">
+      <a class="btn primary" href="#temas">Explorar el temario ↓</a>
+      <a class="btn ghost" href="#flujos" id="liveBtn">▶ Ejecutar un flujo en vivo</a>
+    </div>
+
+    <div class="pipeline" aria-label="Arquitectura de una automatización moderna">
+      <div class="pl-title">
+        <span>arquitectura // automatización moderna</span>
+        <span class="ok">● en ejecución</span>
+      </div>
+      <div class="flowline" id="flowline">
+        <div class="node"><span class="k">origen</span><span class="v">Persona / Sistema / Sensor</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">disparo</span><span class="v">Evento</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">orquestador</span><span class="v">n8n / UiPath / Power Automate</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">integración</span><span class="v">API / Microservicio</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node ia-node"><span class="k">inteligencia</span><span class="v">IA · LLM · OCR</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">datos</span><span class="v">PostgreSQL</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">negocio</span><span class="v">ERP / CRM</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">salida</span><span class="v">Correo / WhatsApp / Dashboard</span></div>
+        <div class="link"><span class="dot"></span></div>
+        <div class="node"><span class="k">gobierno</span><span class="v">Logs + Monitoreo</span></div>
+      </div>
+      <p class="pl-caption">// una automatización moderna no es una herramienta: es una arquitectura</p>
+    </div>
+  </div>
+</header>
+
+<div class="toolbelt">
+  <p class="tb-label">Stack tecnológico</p>
+  <div class="marquee" id="marquee">
+    <div class="mq-track" id="mqtrack"></div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="wrap grid">
+    <div class="stat rv"><div class="num"><span data-count="10">0</span></div><div class="lbl">Módulos de ingeniería</div></div>
+    <div class="stat rv"><div class="num"><span data-count="25">0</span><small>+</small></div><div class="lbl">Herramientas y plataformas</div></div>
+    <div class="stat amber rv"><div class="num"><span data-count="3">0</span></div><div class="lbl">Arquitecturas end-to-end en vivo</div></div>
+    <div class="stat rv"><div class="num"><span data-count="1">0</span></div><div class="lbl">Proyecto integrador de 10 etapas</div></div>
+  </div>
+</div>
+
+<section class="thesis">
+  <div class="wrap rv">
+    <blockquote>Automatizar no es hacer que un robot dé clics. Es <em>analizar, rediseñar, integrar, controlar errores y medir</em> — y usar IA solo cuando realmente aporta valor.</blockquote>
+  </div>
+</section>
+
+<section id="temas">
+  <div class="bg-dots" aria-hidden="true"></div>
+  <div class="bg-ring" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eyebrow rv">Temario</span>
+    <h2 class="rv">Diez módulos, un solo objetivo:<br>pensar como ingeniero de automatización</h2>
+    <p class="lead rv">El orden importa: primero se entiende el proceso, después se construye, y al final se opera con la misma seriedad con la que se opera cualquier sistema en producción.</p>
+    <div class="mod-grid" id="mods"></div>
+  </div>
+</section>
+
+<section id="flujos" class="flows">
+  <div class="wrap">
+    <span class="eyebrow rv">Simulador interactivo</span>
+    <h2 class="rv">Tres arquitecturas reales — ejecútalas paso a paso</h2>
+    <p class="lead rv">Presiona <strong>Ejecutar</strong> en cada flujo y observa cómo se propaga la ejecución por cada nodo, con su log en tiempo real. Ámbar = IA · Verde = persistencia de datos.</p>
+
+    <div class="flowcard rv" data-flow="doc">
+      <div class="fc-head">
+        <div>
+          <h3>📨 Gestión documental automática</h3>
+          <p class="ctx">El caso clásico de oficina: un correo llega y el sistema hace el resto — sin intervención humana.</p>
+        </div>
+        <button class="runbtn">▶ Ejecutar</button>
+      </div>
+      <div class="steps">
+        <span class="step" data-log="webhook: nuevo correo detectado en bandeja soporte@">Correo recibido</span><span class="arr">→</span>
+        <span class="step" data-log="validando MIME type y firma del adjunto… OK">Validar documento</span><span class="arr">→</span>
+        <span class="step db" data-log="SELECT * FROM solicitudes WHERE radicado = '2026-0841' → 1 fila">Consultar base de datos</span><span class="arr">→</span>
+        <span class="step" data-log="plantilla de respuesta renderizada (radicado 2026-0841)">Generar respuesta</span><span class="arr">→</span>
+        <span class="step db" data-log="INSERT INTO documentos … RETURNING id → 15302">Almacenar documento</span><span class="arr">→</span>
+        <span class="step" data-log="SMTP 250 OK · notificación enviada al usuario">Notificar usuario</span>
+      </div>
+      <div class="term" role="log" aria-live="polite"></div>
+    </div>
+
+    <div class="flowcard rv" data-flow="factura">
+      <div class="fc-head">
+        <div>
+          <h3>🧾 Procesamiento inteligente de facturas</h3>
+          <p class="ctx">Automatización determinística + IA: el documento no estructurado se convierte en datos verificados dentro del ERP.</p>
+        </div>
+        <button class="runbtn">▶ Ejecutar</button>
+      </div>
+      <div class="steps">
+        <span class="step" data-log="factura_00318.pdf recibida (214 KB)">Factura PDF</span><span class="arr">→</span>
+        <span class="step ia" data-log="OCR: 98.4% de confianza · 342 tokens extraídos" data-ia="1">OCR</span><span class="arr">→</span>
+        <span class="step ia" data-log='LLM → {"proveedor":"Distribuciones Caribe SAS","nit":"900.482.113-7","valor":4850000}' data-ia="1">IA extrae proveedor, NIT y valor</span><span class="arr">→</span>
+        <span class="step" data-log="NIT verificado contra RUES · valor dentro de rango histórico">Validación</span><span class="arr">→</span>
+        <span class="step db" data-log="BEGIN → INSERT facturas → COMMIT · idempotencia OK">PostgreSQL</span><span class="arr">→</span>
+        <span class="step" data-log="regla de negocio: valor < tope → aprobación automática">Aprobación</span><span class="arr">→</span>
+        <span class="step" data-log="POST /api/erp/cuentas-por-pagar → 201 Created">ERP</span>
+      </div>
+      <div class="term" role="log" aria-live="polite"></div>
+    </div>
+
+    <div class="flowcard rv" data-flow="iot">
+      <div class="fc-head">
+        <div>
+          <h3>📡 Telemetría IoT en tiempo real</h3>
+          <p class="ctx">Arquitectura orientada a eventos: el sensor publica, todo lo demás reacciona.</p>
+        </div>
+        <button class="runbtn">▶ Ejecutar</button>
+      </div>
+      <div class="steps">
+        <span class="step" data-log="sensor T-04 publica: {temp: 78.3°C} — umbral: 75°C">Sensor IoT</span><span class="arr">→</span>
+        <span class="step" data-log="MQTT: mensaje en topic planta/motores/T-04 (QoS 1)">MQTT</span><span class="arr">→</span>
+        <span class="step" data-log="backend suscrito procesa el payload en 12 ms">Backend</span><span class="arr">→</span>
+        <span class="step db" data-log="INSERT telemetria (sensor, valor, ts) · serie temporal">Base de datos</span><span class="arr">→</span>
+        <span class="step" data-log="n8n: condición temp > umbral → rama de alerta">n8n</span><span class="arr">→</span>
+        <span class="step" data-log="alerta enviada: WhatsApp + correo al supervisor de turno">Alerta WhatsApp / correo</span><span class="arr">→</span>
+        <span class="step" data-log="dashboard actualizado vía WebSocket · panel en rojo">Dashboard</span>
+      </div>
+      <div class="term" role="log" aria-live="polite"></div>
+    </div>
+
+    <div class="rule rv">
+      <span class="rk">Principio de diseño</span>
+      <p>Una buena automatización intenta usar APIs antes que simular clics con RPA. El robot que hace clics es el último recurso, no el punto de partida.</p>
+    </div>
+
+    <div class="versus">
+      <div class="vcard rv">
+        <h4>Simular clics (RPA puro) <span class="badge">Último recurso</span></h4>
+        <ul>
+          <li>Frágil: se rompe si cambia la interfaz</li>
+          <li>Lento: opera a velocidad de pantalla</li>
+          <li>Difícil de escalar y de auditar</li>
+          <li>Válido solo para sistemas antiguos sin API</li>
+        </ul>
+      </div>
+      <div class="vcard win rv">
+        <h4>Integrar por API <span class="badge">Preferido</span></h4>
+        <ul>
+          <li>Estable: contrato definido (JSON, códigos de estado)</li>
+          <li>Rápido: milisegundos por operación</li>
+          <li>Escalable, trazable y versionable</li>
+          <li>Seguro: OAuth2, JWT, mínimo privilegio</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bloques">
+  <div class="blob b1" aria-hidden="true"></div>
+  <div class="blob b2" aria-hidden="true"></div>
+  <div class="blob b3" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eyebrow rv">Formato charla</span>
+    <h2 class="rv">Tres bloques para presentarlo ante cualquier audiencia</h2>
+    <div class="blocks">
+      <article class="block rv" data-n="1" style="--w:33%">
+        <span class="bk">Bloque 1</span>
+        <h3>Pensar como ingeniero de automatización</h3>
+        <p>Procesos, BPMN, identificación de oportunidades y diseño de arquitectura. Antes de construir, se piensa.</p>
+        <div class="bar"><i></i></div>
+      </article>
+      <article class="block rv" data-n="2" style="--w:66%">
+        <span class="bk">Bloque 2</span>
+        <h3>Construir automatizaciones</h3>
+        <p>n8n, UiPath, Power Automate, APIs, bases de datos, Python, Node.js, Docker e IA — manos al teclado.</p>
+        <div class="bar"><i></i></div>
+      </article>
+      <article class="block rv" data-n="3" style="--w:100%">
+        <span class="bk">Bloque 3</span>
+        <h3>Automatización del futuro</h3>
+        <p>Agentes de IA, sistemas multiagente, automatización autónoma, IoT y arquitecturas orientadas a eventos.</p>
+        <div class="bar"><i></i></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="proyecto" class="proj">
+  <div class="wrap">
+    <span class="eyebrow rv">Proyecto final</span>
+    <h2 class="rv">Automatización inteligente para recepción y procesamiento de documentos</h2>
+    <p class="lead rv">Un solo ejercicio que integra RPA, APIs, IA, bases de datos, workflows, seguridad e integración de sistemas. El estudiante lo construye de extremo a extremo.</p>
+    <div class="proj-pipe">
+      <div class="pstep rv"><span class="n">P·01</span><span class="t">Formulario o correo</span><span class="d">Punto de entrada del documento</span></div>
+      <div class="pstep rv"><span class="n">P·02</span><span class="t">n8n orquesta el flujo</span><span class="d">Workflow con manejo de errores</span></div>
+      <div class="pstep rv"><span class="n">P·03</span><span class="t">Recepción del PDF</span><span class="d">Validación de formato y tamaño</span></div>
+      <div class="pstep ia rv"><span class="n">P·04</span><span class="t">OCR sobre el documento</span><span class="d">Texto extraído con confianza medida</span></div>
+      <div class="pstep ia rv"><span class="n">P·05</span><span class="t">IA analiza y extrae información</span><span class="d">LLM devuelve JSON estructurado</span></div>
+      <div class="pstep rv"><span class="n">P·06</span><span class="t">Validación de datos</span><span class="d">Reglas de negocio y consistencia</span></div>
+      <div class="pstep rv"><span class="n">P·07</span><span class="t">Guardar en PostgreSQL</span><span class="d">Transacción + idempotencia</span></div>
+      <div class="pstep rv"><span class="n">P·08</span><span class="t">Almacenar PDF en Drive</span><span class="d">Archivo con nomenclatura estándar</span></div>
+      <div class="pstep rv"><span class="n">P·09</span><span class="t">Enviar correo de respuesta</span><span class="d">Notificación al solicitante</span></div>
+      <div class="pstep rv"><span class="n">P·10</span><span class="t">Registrar auditoría</span><span class="d">Qué, cuándo, quién y con qué resultado</span></div>
+    </div>
+    <p class="proj-note">// criterio de aprobación: el flujo debe ser trazable, idempotente y capaz de responder qué ocurrió, cuándo, quién lo ejecutó y con qué resultado.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Ingeniería de la Automatización Inteligente — RPA · APIs · IA · Agentes Autónomos</p>
+    <p>Diseñado para estudiantes de Ingeniería de Sistemas</p>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Volver arriba">↑</button>
+
+<script>
+/* ============ datos de herramientas (logos vía Simple Icons CDN, con fallback) ============ */
+const TOOLS = [
+  ["n8n","n8n"],["UiPath","uipath"],["Power Automate",null,"PA"],["Zapier","zapier"],["Make","make"],
+  ["Node-RED","nodered"],["Selenium","selenium"],["Playwright",null,"PW"],["Docker","docker"],
+  ["PostgreSQL","postgresql"],["Python","python"],["Node.js","nodedotjs"],["Git","git"],
+  ["Kafka","apachekafka"],["RabbitMQ","rabbitmq"],["MQTT","mqtt"],["Grafana","grafana"],
+  ["Prometheus","prometheus"],["Nginx","nginx"],["Linux","linux"],["OpenAI","openai"],["Google Drive","googledrive"]
+];
+(function buildMarquee(){
+  const track = document.getElementById('mqtrack');
+  const html = TOOLS.map(([name,slug,fb])=>{
+    const img = slug ? `<img src="https://cdn.simpleicons.org/${slug}" alt="" loading="lazy" onerror="this.parentElement.classList.add('nofimg')">` : '';
+    const badge = `<span class="fb">${fb || name.slice(0,2).toUpperCase()}</span>`;
+    return `<div class="logo-item ${slug?'':'nofimg'}">${img}${badge}<span class="nm">${name}</span></div>`;
+  }).join('');
+  track.innerHTML = html;
+  // duplicar para loop infinito
+  const clone = track.cloneNode(true);
+  clone.setAttribute('aria-hidden','true');
+  document.getElementById('marquee').appendChild(clone);
+})();
+
+/* ============ módulos ============ */
+const ICONS = {
+  base:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">',
+  found:'<path d="M4 20h16M6 20V9l6-5 6 5v11M10 20v-6h4v6"/>',
+  bpmn:'<circle cx="5" cy="12" r="2.5"/><rect x="10" y="9.5" width="5" height="5" rx="1"/><circle cx="20" cy="12" r="2.5"/><path d="M7.5 12h2.5M15 12h2.5"/>',
+  rpa:'<rect x="5" y="7" width="14" height="11" rx="2"/><path d="M9 11h.01M15 11h.01M9.5 15h5M12 7V4M8 4h8"/>',
+  low:'<path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 5l-2 14"/>',
+  api:'<path d="M7 8l-4 4 4 4M17 8l4 4-4 4M12 4v3M12 17v3"/><circle cx="12" cy="12" r="2.4"/>',
+  evt:'<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>',
+  ia:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5L19 19M19 5l-2.5 2.5M7.5 16.5L5 19"/>',
+  db:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>',
+  ops:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.9 2.9l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.9-2.9l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.6-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.9-2.9l.1.1c.5.5 1.2.6 1.9.3.6-.3 1-.9 1-1.5V3a2 2 0 114 0v.1c0 .6.4 1.2 1 1.5.7.3 1.4.2 1.9-.3l.1-.1a2 2 0 112.9 2.9l-.1.1a1.7 1.7 0 00-.3 1.9c.3.6.9 1 1.5 1H21a2 2 0 110 4h-.1c-.6 0-1.2.4-1.5 1z"/>',
+  sec:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>'
+};
+const MODULES = [
+ {n:"01",icon:"found",name:"Fundamentos de automatización de procesos",open:true,
+  desc:"Qué es automatizar y qué no. Diferencia entre digitalizar y automatizar, entre automatización tradicional e inteligente, y cómo calcular el ROI antes de escribir una sola línea.",
+  chips:[["Automatización vs. digitalización"],["Procesos candidatos"],["Procesos que NO se automatizan"],["ROI"],["Casos empresariales reales"]]},
+ {n:"02",icon:"bpmn",name:"Análisis y modelamiento de procesos",
+  desc:"Levantar el proceso AS-IS, diseñar el TO-BE y modelarlo con BPMN. Identificar cuellos de botella, reglas de negocio, entradas, decisiones y salidas antes de automatizar nada.",
+  chips:[["AS-IS → TO-BE"],["BPM / BPMN"],["Diagramas de flujo"],["Cuellos de botella"],["Reglas de negocio"]]},
+ {n:"03",icon:"rpa",name:"RPA — Robotic Process Automation",
+  desc:"Robots atendidos y desatendidos, selectores, captura de información, manejo de Excel y el caso más común en la vida real: automatizar sistemas antiguos que no tienen API.",
+  chips:[["UiPath","uipath"],["Power Automate Desktop"],["Automation Anywhere"],["Robocorp","robotframework"],["Selenium","selenium"],["Playwright"]]},
+ {n:"04",icon:"low",name:"Automatización Low-Code / No-Code",
+  desc:"Construir una automatización funcional en minutos conectando formularios, APIs, bases de datos, correo y almacenamiento — y entender cuándo el low-code deja de ser suficiente.",
+  chips:[["n8n","n8n"],["Power Automate"],["Make","make"],["Zapier","zapier"],["Node-RED","nodered"]]},
+ {n:"05",icon:"api",name:"Automatización mediante APIs",
+  desc:"El corazón de la integración moderna: REST, JSON, autenticación con tokens y OAuth2, webhooks y comunicación entre microservicios. La regla de oro: API antes que clics.",
+  chips:[["GET · POST · PUT · DELETE"],["JSON / Headers"],["JWT · OAuth2"],["Webhooks"],["Microservicios"]]},
+ {n:"06",icon:"evt",name:"Automatización basada en eventos",
+  desc:"Arquitecturas event-driven: colas de mensajes, procesamiento asíncrono y sistemas que reaccionan en tiempo real en lugar de consultar en bucle.",
+  chips:[["MQTT","mqtt"],["RabbitMQ","rabbitmq"],["Kafka","apachekafka"],["Colas de mensajes"],["Procesamiento asíncrono"]]},
+ {n:"07",icon:"ia",name:"Inteligencia Artificial aplicada a automatización",hot:true,
+  desc:"La diferencia entre automatización determinística y automatización apoyada por IA: modelos LLM, OCR, visión por computador, clasificación, extracción de información, agentes y RAG.",
+  chips:[["LLMs"],["OCR"],["Computer Vision"],["NLP"],["Agentes de IA"],["RAG · Bases vectoriales"]]},
+ {n:"08",icon:"db",name:"Bases de datos dentro de una automatización",
+  desc:"Una automatización seria responde: ¿qué ocurrió?, ¿cuándo?, ¿quién la ejecutó?, ¿qué recibió y qué resultado produjo? Estados, auditoría, transacciones e idempotencia con PostgreSQL.",
+  chips:[["PostgreSQL","postgresql"],["Estados del proceso"],["Transacciones"],["Idempotencia"],["Trazabilidad"],["Auditoría"]]},
+ {n:"09",icon:"ops",name:"DevOps para automatizaciones",
+  desc:"Lo que separa un tutorial básico de RPA de la ingeniería real: una automatización puede funcionar perfecto en el computador del desarrollador y fallar por completo en producción.",
+  chips:[["Docker · Compose","docker"],["Git · CI/CD","git"],["Linux · Nginx","linux"],["Variables de entorno"],["Secretos"],["Alta disponibilidad"]]},
+ {n:"10",icon:"sec",name:"Monitoreo, seguridad y gobierno",
+  desc:"Operar la automatización: logs, alertas, reintentos y métricas; gestión de credenciales, mínimo privilegio, cifrado, protección de APIs y de datos personales.",
+  chips:[["Grafana","grafana"],["Prometheus","prometheus"],["Manejo de excepciones"],["Reintentos"],["Mínimo privilegio"],["Cifrado"],["Protección de datos"]]}
+];
+(function buildModules(){
+  const grid = document.getElementById('mods');
+  grid.innerHTML = MODULES.map(m=>{
+    const chips = m.chips.map(([txt,slug])=>{
+      const img = slug ? `<img src="https://cdn.simpleicons.org/${slug}" alt="" loading="lazy" onerror="this.remove()">` : '';
+      return `<span class="chip ${m.hot?'hot':''}">${img}${txt}</span>`;
+    }).join('');
+    return `<details class="mod rv" ${m.open?'open':''}>
+      <summary>
+        <span class="mod-ic">${ICONS.base}${ICONS[m.icon]}</svg></span>
+        <span class="mod-hd"><span class="mod-num">MÓDULO ${m.n}</span><span class="mod-name">${m.name}</span></span>
+        <span class="mod-plus">+</span>
+      </summary>
+      <div class="mod-body"><p>${m.desc}</p><div class="chips">${chips}</div></div>
+    </details>`;
+  }).join('');
+})();
+
+/* ============ fondo interactivo: red de nodos ============ */
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const c = document.getElementById('net');
+  if(!c || reduced) return;
+  const ctx = c.getContext('2d');
+  let W,H,pts=[],mouse={x:-999,y:-999};
+  const N = () => Math.min(90, Math.floor(W*H/16000));
+  function resize(){
+    const r = c.parentElement.getBoundingClientRect();
+    W = c.width = r.width * devicePixelRatio;
+    H = c.height = r.height * devicePixelRatio;
+    c.style.width = r.width+'px'; c.style.height = r.height+'px';
+    pts = Array.from({length:N()},()=>({
+      x:Math.random()*W, y:Math.random()*H,
+      vx:(Math.random()-.5)*.28*devicePixelRatio,
+      vy:(Math.random()-.5)*.28*devicePixelRatio,
+      r:(Math.random()*1.6+1)*devicePixelRatio
+    }));
+  }
+  resize();
+  addEventListener('resize',resize);
+  c.parentElement.addEventListener('mousemove',e=>{
+    const r = c.getBoundingClientRect();
+    mouse.x = (e.clientX-r.left)*devicePixelRatio;
+    mouse.y = (e.clientY-r.top)*devicePixelRatio;
+  });
+  c.parentElement.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999});
+  const LINK = 130*devicePixelRatio, MOUSE = 190*devicePixelRatio;
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for(const p of pts){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      // leve atracción del cursor
+      const dxm=mouse.x-p.x, dym=mouse.y-p.y, dm=Math.hypot(dxm,dym);
+      if(dm<MOUSE && dm>1){ p.x+=dxm/dm*.35; p.y+=dym/dm*.35; }
+    }
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(d<LINK){
+          ctx.strokeStyle=`rgba(31,79,216,${(1-d/LINK)*.16})`;
+          ctx.lineWidth=devicePixelRatio;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+        }
+      }
+      const p=pts[i];
+      const dm=Math.hypot(mouse.x-p.x,mouse.y-p.y);
+      ctx.fillStyle = dm<MOUSE ? 'rgba(232,147,12,.65)' : 'rgba(31,79,216,.42)';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ============ animación pipeline hero ============ */
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const flow = document.getElementById('flowline'); if(!flow) return;
+  const nodes=[...flow.querySelectorAll('.node')], links=[...flow.querySelectorAll('.link')];
+  if(reduced){nodes.forEach(n=>n.classList.add('on'));return}
+  let i=0,timer;
+  function step(){
+    nodes.forEach(n=>n.classList.remove('on'));
+    links.forEach(l=>l.classList.remove('on'));
+    nodes[i].classList.add('on');
+    if(i<links.length){const l=links[i];void l.offsetWidth;l.classList.add('on')}
+    i=(i+1)%nodes.length;
+    timer=setTimeout(step, i===0?1600:620);
+  }
+  step();
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)clearTimeout(timer);else step()});
+})();
+
+/* ============ simulador de flujos ============ */
+document.querySelectorAll('.flowcard').forEach(card=>{
+  const btn=card.querySelector('.runbtn');
+  const steps=[...card.querySelectorAll('.step')];
+  const term=card.querySelector('.term');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  btn.addEventListener('click',async ()=>{
+    btn.disabled=true; btn.textContent='⏳ Ejecutando…';
+    steps.forEach(s=>s.classList.remove('running','done'));
+    term.innerHTML=''; term.classList.add('open');
+    const t0=Date.now();
+    log('info',`[${hora()}] iniciando ejecución del flujo…`);
+    for(const s of steps){
+      s.classList.add('running');
+      s.scrollIntoView({block:'nearest',inline:'nearest',behavior:reduced?'auto':'smooth'});
+      await wait(reduced?60:820);
+      s.classList.remove('running'); s.classList.add('done');
+      log(s.dataset.ia?'ia':(s.classList.contains('db')?'ok':''),`[${hora()}] ${s.dataset.log}`);
+    }
+    log('ok',`[${hora()}] ✓ flujo completado en ${((Date.now()-t0)/1000).toFixed(1)}s · auditoría registrada`);
+    btn.disabled=false; btn.textContent='↺ Ejecutar de nuevo';
+  });
+  function log(cls,txt){
+    const d=document.createElement('div');
+    d.className='ln '+cls; d.textContent=txt;
+    term.appendChild(d); term.scrollTop=term.scrollHeight;
+  }
+});
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const hora=()=>new Date().toLocaleTimeString('es-CO',{hour12:false});
+
+/* ============ contadores ============ */
+(function(){
+  const nums=document.querySelectorAll('[data-count]');
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target, target=+el.dataset.count, dur=1100, t0=performance.now();
+      (function tick(t){
+        const p=Math.min(1,(t-t0)/dur);
+        el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+        if(p<1)requestAnimationFrame(tick);
+      })(t0);
+      io.unobserve(el);
+    });
+  },{threshold:.5});
+  nums.forEach(n=>io.observe(n));
+})();
+
+/* ============ botón hero: bajar y ejecutar el primer flujo ============ */
+(function(){
+  const btn=document.getElementById('liveBtn');
+  if(!btn) return;
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const sec=document.getElementById('flujos');
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sec.scrollIntoView({behavior:reduced?'auto':'smooth'});
+    // esperar a que la sección esté visible y disparar el primer flujo
+    const firstRun=sec.querySelector('.flowcard .runbtn');
+    if(!firstRun) return;
+    const io=new IntersectionObserver((es,obs)=>{
+      es.forEach(en=>{
+        if(en.isIntersecting){
+          obs.disconnect();
+          setTimeout(()=>{ if(!firstRun.disabled) firstRun.click(); }, reduced?100:450);
+        }
+      });
+    },{threshold:.35});
+    io.observe(sec.querySelector('.flowcard'));
+    // respaldo por si el observer no dispara (navegadores antiguos)
+    setTimeout(()=>{ io.disconnect(); if(!firstRun.disabled && !sec.querySelector('.term.open')) firstRun.click(); }, 2500);
+  });
+})();
+
+/* ============ parallax de fondo en temario ============ */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const sec=document.getElementById('temas');
+  const dots=sec.querySelector('.bg-dots');
+  sec.addEventListener('mousemove',e=>{
+    const r=sec.getBoundingClientRect();
+    dots.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5).toFixed(3));
+    dots.style.setProperty('--my',((e.clientY-r.top)/r.height-.5).toFixed(3));
+  });
+  sec.addEventListener('mouseleave',()=>{dots.style.setProperty('--mx',0);dots.style.setProperty('--my',0)});
+})();
+
+/* ============ reveal + progreso + toTop ============ */
+(function(){
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv,.block').forEach(el=>io.observe(el));
+})();
+const bar=document.getElementById('progress'), toTop=document.getElementById('toTop');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  toTop.classList.toggle('show',h.scrollTop>600);
+},{passive:true});
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+</script>
+</body>
+</html>

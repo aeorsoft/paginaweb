@@ -1,136 +1,133 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { AutomationPlatforms } from "@/components/marketing/automation-platforms";
 
 export function Hero() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-        {/* Contenido de texto */}
+    <div className="flex flex-col">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="space-y-8 text-center lg:text-left">
           <div className="space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-500">
-              Desarrollador Full Stack
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+              {siteConfig.title}
             </p>
-            <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+            <h1 className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-5xl font-bold text-transparent lg:text-6xl">
               {siteConfig.name}
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
-              {siteConfig.description}
+            <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
+              {siteConfig.roles.map((role) => (
+                <span
+                  key={role}
+                  className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-100"
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+            <p className="max-w-2xl text-xl text-gray-300">
+              {siteConfig.profile.headline}
+            </p>
+            <p className="max-w-2xl text-base text-gray-400">
+              {siteConfig.profile.about}
             </p>
           </div>
 
-          {/* Estadísticas */}
-          <div className="grid grid-cols-3 gap-6 py-8">
+          <ul className="grid gap-3 text-left sm:grid-cols-2">
+            {siteConfig.profile.focus.map((item) => (
+              <li
+                key={item}
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-200 backdrop-blur-sm"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="grid grid-cols-3 gap-6 py-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">10+</div>
-              <div className="text-sm text-gray-600">Proyectos</div>
+              <div className="text-2xl font-bold text-cyan-300">10+</div>
+              <div className="text-sm text-gray-400">Proyectos</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">10+</div>
-              <div className="text-sm text-gray-600">Años Exp.</div>
+              <div className="text-2xl font-bold text-violet-300">10+</div>
+              <div className="text-sm text-gray-400">Años Exp.</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">100%</div>
-              <div className="text-sm text-gray-600">Satisfacción</div>
+              <div className="text-2xl font-bold text-emerald-300">RPA / BPM</div>
+              <div className="text-sm text-gray-400">Automatización</div>
             </div>
           </div>
 
-          {/* Botones de acción */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <Link
-              className="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 text-lg font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:scale-105 shadow-lg"
+              className="rounded-lg bg-gradient-to-r from-cyan-600 to-violet-600 px-8 py-3 text-lg font-medium text-white shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 hover:from-cyan-500 hover:to-violet-500"
               href="#contact"
             >
               Contactar
             </Link>
             <Link
-              className="rounded-lg border-2 border-gray-300 px-8 py-3 text-lg font-medium text-gray-700 transition-all hover:border-blue-500 hover:text-blue-600 dark:border-gray-600 dark:text-gray-300 dark:hover:border-blue-400 dark:hover:text-blue-400"
-              href={siteConfig.links.portfolio}
-              target="_blank"
-              rel="noreferrer"
+              className="rounded-lg border-2 border-white/20 px-8 py-3 text-lg font-medium text-gray-200 transition-all hover:border-cyan-400 hover:text-cyan-200"
+              href="#automatizacion"
             >
-              Ver Portfolio
+              Ver plataformas
             </Link>
           </div>
 
-          {/* Enlaces sociales */}
-          <div className="flex justify-center lg:justify-start gap-6 pt-4">
+          <div className="flex justify-center gap-6 pt-2 lg:justify-start">
             <a
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
-              className="text-gray-600 hover:text-blue-600 transition-colors"
+              className="text-gray-400 transition-colors hover:text-cyan-300"
             >
               <span className="sr-only">GitHub</span>
               <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
               </svg>
             </a>
             <a
               href={siteConfig.links.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="text-gray-600 hover:text-blue-600 transition-colors"
+              className="text-gray-400 transition-colors hover:text-cyan-300"
             >
               <span className="sr-only">LinkedIn</span>
               <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
               </svg>
             </a>
           </div>
         </div>
 
-        {/* Animación simple integrada */}
         <div className="relative">
-          <div className="w-full h-96 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 rounded-lg relative overflow-hidden">
-            {/* Código flotante animado */}
-            <div className="absolute inset-0 p-4">
-              {[
-                { text: 'const', color: 'text-green-400', x: 10, y: 20 },
-                { text: 'React', color: 'text-blue-400', x: 70, y: 30 },
-                { text: '=>', color: 'text-yellow-400', x: 30, y: 60 },
-                { text: '{}', color: 'text-purple-400', x: 80, y: 70 },
-                { text: 'useState', color: 'text-blue-400', x: 20, y: 80 },
-                { text: '//', color: 'text-gray-500', x: 60, y: 50 },
-                { text: 'return', color: 'text-green-400', x: 50, y: 40 },
-                { text: 'import', color: 'text-purple-400', x: 15, y: 10 },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className={`absolute text-sm font-mono ${item.color} opacity-80 animate-pulse`}
-                  style={{
-                    left: `${item.x}%`,
-                    top: `${item.y}%`,
-                    animationDelay: `${index * 0.5}s`,
-                  }}
-                >
-                  {item.text}
-                </div>
-              ))}
-            </div>
-            
-            {/* Efectos de partículas */}
-            <div className="absolute inset-0">
-              {[...Array(15)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-60 animate-ping"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 3}s`,
-                    animationDuration: `${2 + Math.random() * 2}s`,
-                  }}
-                />
-              ))}
-            </div>
-            
-            {/* Overlay con información adicional */}
-            <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-4">
+          <div className="relative h-96 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-blue-950 to-violet-950">
+            <div className="absolute inset-0 bg-hero-scan" />
+            {[
+              { text: "architect()", color: "text-cyan-300", x: 10, y: 18 },
+              { text: "RPA", color: "text-blue-300", x: 68, y: 28 },
+              { text: "BPMN", color: "text-violet-300", x: 28, y: 58 },
+              { text: "orchestrate", color: "text-emerald-300", x: 58, y: 68 },
+              { text: "API", color: "text-sky-300", x: 16, y: 78 },
+              { text: "iPaaS", color: "text-fuchsia-300", x: 72, y: 48 },
+              { text: "workflow", color: "text-amber-200", x: 42, y: 36 },
+            ].map((item, index) => (
+              <div
+                key={item.text}
+                className={`absolute font-mono text-sm opacity-80 animate-float ${item.color}`}
+                style={{
+                  left: `${item.x}%`,
+                  top: `${item.y}%`,
+                  animationDelay: `${index * 0.4}s`,
+                }}
+              >
+                {item.text}
+              </div>
+            ))}
+            <div className="absolute bottom-4 left-4 right-4 rounded-lg bg-black/50 p-4 backdrop-blur-sm">
               <div className="flex items-center justify-between text-sm text-white">
-                <span>💻 Desarrollando el futuro</span>
-                <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Arquitectura + automatización</span>
+                <span className="flex items-center gap-2">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
                   Disponible
                 </span>
               </div>
@@ -139,136 +136,99 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Sección de tecnologías */}
-      <div className="max-w-4xl mx-auto mt-16 text-center">
-        <h3 className="text-2xl font-bold mb-8">Tecnologías que domino</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {['Net Core C#','Angular','Ionic','Sql Server','Flutter','React', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'PostgreSQL', 'Docker'].map((tech) => (
-            <div key={tech} className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="text-lg font-semibold">{tech}</div>
+      <div className="mx-auto mt-16 max-w-4xl text-center">
+        <h3 className="mb-8 text-2xl font-bold text-white">Stack de desarrollo</h3>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {[
+            "Net Core C#",
+            "Angular",
+            "Ionic",
+            "Sql Server",
+            "Flutter",
+            "React",
+            "Next.js",
+            "TypeScript",
+            "Node.js",
+            "Python",
+            "PostgreSQL",
+            "Docker",
+          ].map((tech) => (
+            <div
+              key={tech}
+              className="rounded-lg border border-white/10 bg-white/5 p-4 text-lg font-semibold text-gray-100 backdrop-blur-sm transition hover:border-cyan-400/40"
+            >
+              {tech}
             </div>
           ))}
         </div>
       </div>
 
+      <AutomationPlatforms />
 
-      {/* Sección de proyectos realizados */}
-      <div className="max-w-6xl mx-auto mt-20">
-        <h3 className="text-3xl font-bold text-center mb-12">Proyectos Realizados</h3>
-        
-        {/* Fondo de programación animado */}
-        <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 rounded-2xl overflow-hidden p-8">
-          {/* Código flotante de fondo */}
-          <div className="absolute inset-0 opacity-20">
+      <div className="mx-auto mt-20 max-w-6xl">
+        <h3 className="mb-12 text-center text-3xl font-bold text-white">Proyectos realizados</h3>
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-blue-950 to-violet-950 p-8">
+          <div className="absolute inset-0 bg-platforms-flow opacity-50" />
+          <div className="relative z-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
-              { text: 'function', x: 5, y: 10 },
-              { text: 'const', x: 85, y: 15 },
-              { text: '=>', x: 15, y: 30 },
-              { text: '{}', x: 90, y: 35 },
-              { text: 'import', x: 10, y: 50 },
-              { text: 'export', x: 80, y: 55 },
-              { text: 'return', x: 20, y: 70 },
-              { text: '//', x: 85, y: 75 },
-              { text: 'class', x: 5, y: 90 },
-              { text: 'async', x: 90, y: 95 },
-            ].map((item, index) => (
+              {
+                title: "Facturación Electrónica",
+                text: "Sistema completo de facturación digital con integración a SUNAT y reportes en tiempo real.",
+                icon: "🧾",
+              },
+              {
+                title: "Catastro Multipropósito",
+                text: "Plataforma GIS para gestión territorial con mapas interactivos y análisis espacial.",
+                icon: "🏘️",
+              },
+              {
+                title: "Plan de Alimentación Escolar",
+                text: "Sistema de gestión nutricional para instituciones educativas con seguimiento de menús.",
+                icon: "🍎",
+              },
+              {
+                title: "Aplicación de Recorridos",
+                text: "App móvil para optimización de rutas de transporte con GPS y análisis de tráfico.",
+                icon: "🚌",
+              },
+              {
+                title: "Aplicación de comunicación IoT",
+                text: "Red de dispositivos inteligentes con protocolos MQTT y WebSocket, y monitoreo en tiempo real de sensores y equipos en campo.",
+                icon: "📡",
+              },
+              {
+                title: "Aplicaciones Móviles",
+                text: "Desarrollo de apps nativas e híbridas con React Native y Flutter.",
+                icon: "📱",
+              },
+              {
+                title: "Geovisores de MikroTik",
+                text: "Geovisor para visualizar y administrar equipos MikroTik sobre el mapa: enlaces inalámbricos, cobertura, estado de red y topología.",
+                icon: "🗺️",
+              },
+              {
+                title: "Sistemas de alertas tempranas",
+                text: "Sistema de alertas tempranas con umbrales, notificaciones automáticas y tableros operativos para anticipar riesgos y responder a tiempo.",
+                icon: "🚨",
+              },
+              {
+                title: "Software de gestión documental",
+                text: "Software para digitalizar, clasificar, versionar y rastrear documentos, con flujos de aprobación y control de acceso.",
+                icon: "📁",
+              },
+            ].map((project) => (
               <div
-                key={index}
-                className="absolute text-xs font-mono text-blue-300 opacity-30"
-                style={{
-                  left: `${item.x}%`,
-                  top: `${item.y}%`,
-                  animationDelay: `${index * 0.8}s`,
-                  animation: 'float 8s ease-in-out infinite',
-                }}
+                key={project.title}
+                className="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
               >
-                {item.text}
-              </div>
-            ))}
-          </div>
-
-          {/* Grid de proyectos */}
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Facturación Electrónica */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 group">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-2xl">
-                  🧾
+                <div className="text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-2xl">
+                    {project.icon}
+                  </div>
+                  <h4 className="mb-2 text-xl font-bold text-white">{project.title}</h4>
+                  <p className="text-sm text-gray-300">{project.text}</p>
                 </div>
-                <h4 className="text-xl font-bold text-white mb-2">Facturación Electrónica</h4>
-                <p className="text-gray-300 text-sm">Sistema completo de facturación digital con integración a SUNAT y reportes en tiempo real.</p>
               </div>
-            </div>
-
-            {/* Catastro Multipropósito */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 group">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-2xl">
-                  🏘️
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2">Catastro Multipropósito</h4>
-                <p className="text-gray-300 text-sm">Plataforma GIS para gestión territorial con mapas interactivos y análisis espacial.</p>
-              </div>
-            </div>
-
-            {/* Plan de Alimentación Escolar */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 group">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center text-2xl">
-                  🍎
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2">Plan de Alimentación Escolar</h4>
-                <p className="text-gray-300 text-sm">Sistema de gestión nutricional para instituciones educativas con seguimiento de menús.</p>
-              </div>
-            </div>
-
-            {/* Aplicación de Recorridos */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 group">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center text-2xl">
-                  🚌
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2">Aplicación de Recorridos</h4>
-                <p className="text-gray-300 text-sm">App móvil para optimización de rutas de transporte con GPS y análisis de tráfico.</p>
-              </div>
-            </div>
-
-            {/* Sistemas de Comunicación IoT */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 group">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-2xl">
-                  📡
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2">Comunicación IoT</h4>
-                <p className="text-gray-300 text-sm">Red de dispositivos inteligentes con protocolos de comunicación MQTT y WebSocket.</p>
-              </div>
-            </div>
-
-            {/* Aplicaciones Móviles */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 group">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-2xl">
-                  📱
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2">Aplicaciones Móviles</h4>
-                <p className="text-gray-300 text-sm">Desarrollo de apps nativas e híbridas con React Native y Flutter.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Efectos de partículas adicionales */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-40 animate-ping"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 4}s`,
-                  animationDuration: `${2 + Math.random() * 3}s`,
-                }}
-              />
             ))}
           </div>
         </div>

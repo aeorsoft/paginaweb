@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "standalone",
+  async rewrites() {
+    return [
+      {
+        source: "/automatizacion-inteligente",
+        destination: "/automatizacion-inteligente.html",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

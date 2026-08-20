@@ -5,6 +5,7 @@ import AppProviders from "./providers";
 import { MainNav } from "@/components/navigation/main-nav";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { Chatbot } from "@/components/chat/chatbot";
+import { DynamicBackground } from "@/components/marketing/dynamic-background";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,13 +32,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" className="dark" data-theme="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white text-black antialiased dark:bg-neutral-950 dark:text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[#05070f] text-white antialiased`}
       >
         <AppProviders>
-          <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col">
-            <header className="border-b border-black/10 dark:border-white/10">
+          <DynamicBackground />
+          <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col">
+            <header className="border-b border-white/10 bg-black/20 backdrop-blur-md">
               <MainNav />
             </header>
             <main className="flex flex-1 flex-col gap-10 px-4 py-10 sm:px-6">
