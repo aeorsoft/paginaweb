@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         source: "/nexo-centro-de-datos",
         destination: "/nexo-centro-de-datos.html",
       },
+      {
+        source: "/radar-de-ciberataques",
+        destination: "/radar-de-ciberataques.html",
+      },
     ];
   },
 };

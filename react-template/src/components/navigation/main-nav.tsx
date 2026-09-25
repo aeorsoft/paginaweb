@@ -13,6 +13,7 @@ const links = [
   { href: "/automatizacion-inteligente", label: "Automatización inteligente", standalone: true },
   { href: "/laboratorio-sinapsis", label: "Laboratorio Sinapsis", standalone: true },
   { href: "/nexo-centro-de-datos", label: "Nexo Centro de Datos", standalone: true },
+  { href: "/radar-de-ciberataques", label: "Radar de Ciberataques", standalone: true },
   { href: "/tasks", label: "Tasks" },
 ];
 
