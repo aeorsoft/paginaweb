@@ -1,0 +1,878 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Laboratorio Sinapsis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#060A13; --surface:#0B1221; --surface-2:#132036; --node:#0D1628;
+  --ink:#DCE6FF; --muted:#7D8BAA; --line:#1B2842; --line-soft:#142038;
+  --cyan:#3DE3FF; --brain:#C77DFF;
+  --f-resumen:#5B8CFF; --f-montos:#FFB547; --f-riesgo:#FF5E7A; --f-qa:#2EE6B8;
+  --ok:#2EE6B8; --warn:#FFB547; --bad:#FF5E7A;
+  --display:"Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --sans:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;
+  background-image:radial-gradient(900px 420px at 12% -10%, rgba(61,227,255,.10), transparent 70%),radial-gradient(800px 460px at 95% 0%, rgba(199,125,255,.12), transparent 70%);background-repeat:no-repeat}
+.app{max-width:1440px;margin:0 auto;padding:22px 20px 40px;display:flex;flex-direction:column;gap:14px}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 32px}
+.back{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:6px;background:rgba(11,18,33,.7)}
+.back:hover{border-color:var(--cyan);box-shadow:0 0 14px rgba(61,227,255,.2)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin:0 0 4px}
+h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;letter-spacing:.02em;margin:0;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--cyan),var(--brain));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(61,227,255,.25))}
+.lede{margin:8px 0 0;max-width:62ch;color:var(--muted);text-wrap:pretty}
+.sys{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sys span{font-family:var(--mono);font-size:11px;padding:3px 9px;border:1px solid var(--line);border-radius:4px;background:rgba(11,18,33,.7);color:var(--muted)}
+.sys span b{color:var(--ink);font-weight:500}
+.sys .live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--f-qa);margin-right:6px;box-shadow:0 0 8px var(--f-qa);animation:blink 1.6s infinite}
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px}
+.stat{display:flex;flex-direction:column}
+.stat b{font-family:var(--display);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--cyan)}
+.stat span{font-size:11px;color:var(--muted);letter-spacing:.04em}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding-block:4px}
+.flows{display:flex;flex-wrap:wrap;gap:6px}
+.flow-btn{--c:var(--f-resumen);display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border:1px solid var(--line);background:var(--surface);border-radius:6px;cursor:pointer;font-weight:500;font-size:13px;transition:all .15s}
+.flow-btn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.flow-btn:hover{border-color:var(--c)}
+.flow-btn[aria-checked="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,var(--surface));box-shadow:0 0 0 1px var(--c) inset,0 0 18px color-mix(in srgb,var(--c) 30%,transparent)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.speed{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.speed input{width:110px;accent-color:var(--cyan)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--cyan)}
+.btn.primary{background:linear-gradient(90deg,#1BB8D6,#8A5CF0);color:#fff;border-color:transparent;box-shadow:0 0 18px rgba(61,227,255,.25)}
+.btn.primary:hover{filter:brightness(1.12)}
+.flowdesc{margin:0;font-size:13px;color:var(--muted)}
+.flowdesc b{color:var(--ink);font-weight:600}
+.flowdesc .path{font-family:var(--mono);font-size:12px;color:var(--cyan)}
+
+.grid{display:grid;grid-template-columns:250px minmax(0,1fr) 310px;gap:14px;align-items:start}
+.bottom{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:1180px){.grid{grid-template-columns:1fr 1fr}.stage{grid-column:1/-1;order:-1}}
+@media (max-width:900px){.bottom{grid-template-columns:1fr}}
+@media (max-width:720px){.grid{grid-template-columns:1fr} h1{font-size:34px}}
+.panel{background:linear-gradient(180deg,rgba(19,32,54,.55),rgba(11,18,33,.9));border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.panel h2{font-family:var(--display);font-size:15px;font-weight:600;margin:0;letter-spacing:.06em;text-transform:uppercase}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+.hint{font-size:12px;color:var(--muted)}
+
+.doclist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.doc{display:flex;gap:8px;align-items:center;padding:8px 8px 8px 10px;border-radius:6px;background:rgba(6,10,19,.6);border:1px solid var(--line-soft)}
+.doc.processing{border-color:var(--cyan);box-shadow:0 0 14px rgba(61,227,255,.2)}
+.doc-main{display:flex;flex-direction:column;min-width:0;flex:1}
+.doc-title{font-weight:600;font-size:13px;overflow-wrap:anywhere}
+.doc-meta{font-size:11px;color:var(--muted)}
+.doc-state{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.doc.done .doc-state{color:var(--ok)}
+.doc.processing .doc-state,.doc.queued .doc-state{color:var(--cyan)}
+.btn-sm{border:1px solid var(--line);background:var(--surface-2);border-radius:5px;padding:4px 9px;font-size:12px;cursor:pointer;white-space:nowrap}
+.btn-sm:hover:not(:disabled){border-color:var(--cyan)}
+.btn-sm:disabled{opacity:.4;cursor:default}
+.adders{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.upload{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px dashed var(--line);border-radius:6px;cursor:pointer;font-size:12.5px;color:var(--muted);text-align:center;position:relative}
+.upload:hover{border-color:var(--cyan);color:var(--ink)}
+.upload input{position:absolute;width:1px;height:1px;opacity:0}
+details summary{cursor:pointer;font-size:12.5px;color:var(--muted)}
+details textarea{width:100%;min-height:90px;margin-top:6px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);resize:vertical;font-size:12.5px}
+details input{width:100%;margin-top:6px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);font-size:12.5px}
+details .btn{margin-top:6px;width:100%}
+
+.stage{padding:0;overflow:hidden;position:relative;background:radial-gradient(ellipse at 55% 50%, #0E1A33 0%, #070C18 75%)}
+#bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage-head,.svgwrap,.legend{position:relative}
+.stage-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;padding:12px 14px 0}
+.now{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.now b{color:var(--cyan);font-weight:500}
+.svgwrap{overflow-x:auto}
+#graph{display:block;width:100%;min-width:700px;height:auto}
+.colhead{font-family:var(--mono);font-size:10px;letter-spacing:.2em;fill:var(--muted);opacity:.8}
+.edge{fill:none;stroke:#1E2C4A;stroke-width:1.4}
+.edge.active{stroke:var(--flow);stroke-width:2;stroke-dasharray:4 8;animation:dash .9s linear infinite;filter:drop-shadow(0 0 4px var(--flow))}
+@keyframes dash{to{stroke-dashoffset:-24}}
+.node{transition:opacity .3s}
+.node.dim{opacity:.32}
+.nlabel{font-family:var(--display);font-weight:600;font-size:13px;fill:var(--ink);letter-spacing:.03em}
+.nsub{font-family:var(--mono);font-size:9.5px;fill:var(--muted)}
+.badge circle{fill:var(--cyan)}
+.badge text{font-family:var(--mono);font-size:10px;fill:#04121A;font-weight:500}
+.ring{fill:none;stroke:var(--flow);stroke-width:2;opacity:0;transform-box:fill-box;transform-origin:center}
+.bbody{transition:transform .6s ease}
+.lobe-s{fill:none;stroke:var(--brain);stroke-width:4}
+.lobe-f{fill:#140F2A}
+.lobe-t{fill:var(--brain)}
+.gyri{fill:none;stroke:var(--brain);stroke-width:1.5;stroke-linecap:round;opacity:.7}
+.syn{stroke:var(--cyan);stroke-width:.7;opacity:.3}
+.neuron{fill:#9FB3D9;opacity:.18}
+.neuron.on{fill:var(--cyan);opacity:1;filter:drop-shadow(0 0 3px var(--cyan));animation:fire 2.4s ease-in-out infinite}
+@keyframes fire{0%,100%{opacity:.35}50%{opacity:1}}
+.halo2{fill:var(--brain);opacity:.12;filter:blur(8px)}
+.orbit{fill:none;stroke:var(--brain);stroke-width:1;stroke-dasharray:2 7;opacity:.6;transform-box:fill-box;transform-origin:center;animation:spin 16s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rack{fill:#0A1222;stroke:#2B3B5C;stroke-width:1.4}
+.unit{fill:#101C33;stroke:#22324F}
+.led{fill:var(--f-qa);animation:blink 1.2s steps(2,jump-none) infinite}
+.led.c{fill:var(--cyan)}
+.slot{stroke:#2B3B5C;stroke-width:1.5}
+.gpubar{fill:var(--cyan);filter:drop-shadow(0 0 3px var(--cyan))}
+.gputrack{fill:#0A1222;stroke:#22324F}
+@keyframes blink{50%{opacity:.25}}
+.pin{stroke:#4A5D85;stroke-width:2}
+.chip{fill:url(#chipFill);stroke:#3A4F7A;stroke-width:1.4}
+.die{fill:#08101E;stroke:var(--cyan);stroke-opacity:.55}
+.core2{fill:var(--cyan);filter:drop-shadow(0 0 5px var(--cyan))}
+.trace{stroke:var(--cyan);stroke-opacity:.35;stroke-width:1}
+.sheet{fill:#0F1A2F;stroke:#3A4F7A}
+.sheet-l{stroke:#3A4F7A;stroke-width:1.5}
+.screen{fill:color-mix(in srgb,var(--oc) 13%,#08101E);stroke:var(--oc);stroke-width:1.6;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--oc) 45%,transparent))}
+.stand{fill:#1B2842}
+.dot{fill:var(--oc)}
+.particle{fill:var(--pc);filter:drop-shadow(0 0 6px var(--pc))}
+.trail{fill:var(--pc)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;padding:0 14px 12px;font-size:11.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{width:16px;height:16px}
+
+.brains{display:flex;flex-direction:column;gap:14px}
+.bsec{display:flex;flex-direction:column;gap:6px}
+.bsec + .bsec{padding-top:12px;border-top:1px solid var(--line-soft)}
+.bsec h3{margin:0;font-size:12.5px;font-weight:600;display:flex;justify-content:space-between;gap:8px;font-family:var(--display);letter-spacing:.04em}
+.bsec h3 span{font-family:var(--mono);font-weight:400;font-size:11px;color:var(--muted);letter-spacing:0}
+.cloud{display:flex;flex-wrap:wrap;gap:4px 7px;align-items:baseline}
+.concept{font-size:calc(12px * var(--s));color:var(--ink);font-weight:500;line-height:1.3}
+.concept:nth-child(3n+1){color:var(--brain)}
+.concept:nth-child(4n+2){color:var(--cyan)}
+.enttypes{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.et{background:rgba(6,10,19,.6);border:1px solid var(--line-soft);border-radius:5px;padding:5px 7px;display:flex;flex-direction:column}
+.et b{font-family:var(--mono);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--cyan)}
+.et span{font-size:10.5px;color:var(--muted)}
+.ents{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-size:12px}
+.ents li{display:flex;justify-content:space-between;gap:8px}
+.ents li span:last-child{font-family:var(--mono);color:var(--muted);font-size:11px;white-space:nowrap}
+.episodes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;font-size:12px}
+.episodes li{display:grid;grid-template-columns:auto 1fr;gap:0 8px}
+.episodes .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);grid-row:span 2;padding-top:2px}
+.episodes .m{font-size:11px;color:var(--muted)}
+.fdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.curve text{font-family:var(--mono);font-size:9px;fill:var(--muted)}
+.curve .grid{stroke:var(--line);stroke-width:1}
+.curve .bar{fill:var(--brain);filter:drop-shadow(0 0 3px var(--brain))}
+.empty{font-size:12px;color:var(--muted);font-style:italic}
+
+.ask{display:flex;gap:6px;margin-bottom:8px}
+.ask input{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.ask input:focus{border-color:var(--cyan)}
+.sugg{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.sugg button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 10px;font-size:11.5px;cursor:pointer;color:var(--muted)}
+.sugg button:hover{color:var(--ink);border-color:var(--f-qa)}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{--c:var(--f-resumen);border:1px solid color-mix(in srgb,var(--c) 35%,var(--line));border-radius:8px;background:var(--node);overflow:hidden;animation:cardin .35s ease-out}
+@keyframes cardin{from{transform:translateY(-6px);opacity:.3}}
+.card-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;padding:8px 12px;background:color-mix(in srgb, var(--c) 12%, var(--node));border-bottom:1px solid var(--line-soft)}
+.card-head .t{font-weight:600;font-size:13px;display:flex;align-items:center;gap:7px;font-family:var(--display);letter-spacing:.03em}
+.card-head .t::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.card-head .m{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.card-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;font-size:13px}
+.card-body p{margin:0;max-width:72ch}
+.card-body ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+.label{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:11px;border-bottom:1px solid var(--line);padding:4px 6px}
+td{padding:4px 6px;border-bottom:1px solid var(--line-soft)}
+td.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;color:var(--c2);background:color-mix(in srgb, var(--c2) 16%, transparent)}
+.p-ok{--c2:var(--ok)} .p-warn{--c2:var(--warn)} .p-bad{--c2:var(--bad)}
+.meter{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:99px;background:var(--c2);box-shadow:0 0 10px var(--c2)}
+mark{background:color-mix(in srgb, var(--f-riesgo) 28%, transparent);color:inherit;border-radius:3px;padding:0 2px}
+.qa dt{font-weight:600}
+.qa dd{margin:0 0 6px;color:var(--ink)}
+.qa{margin:0}
+.src{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+
+.log{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:11.5px;max-height:560px;overflow:auto;display:flex;flex-direction:column}
+.log li{display:grid;grid-template-columns:auto auto 1fr;gap:8px;padding:4px 0;border-bottom:1px dashed var(--line-soft);align-items:baseline}
+.log time{color:var(--muted);font-size:10.5px}
+.log b{font-weight:500;white-space:nowrap}
+.k-agent{color:var(--cyan)} .k-brain{color:var(--brain)} .k-io{color:var(--muted)} .k-out{color:var(--f-qa)}
+.log span{overflow-wrap:anywhere}
+
+@media (prefers-reduced-motion: reduce){
+  .edge.active,.orbit,.card,.led,.neuron.on,.sys .live::before{animation:none}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div>
+      <a class="back" href="/">← Sitio principal</a>
+      <p class="eyebrow">// Laboratorio de agentes y cerebros IA</p>
+      <h1>Sinapsis</h1>
+      <p class="lede">Los documentos entran por la bandeja, los agentes los leen y extraen datos, los cerebros aprenden de cada uno y el flujo que elijas decide qué información sale al final.</p>
+      <div class="sys" id="sys"></div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <section class="toolbar">
+    <div class="flows" id="flows" role="radiogroup" aria-label="Flujo de proceso"></div>
+    <div class="controls">
+      <label class="speed" for="speed">Velocidad <input id="speed" type="range" min="1" max="5" value="3"></label>
+      <button class="btn primary" id="runAll">Procesar toda la bandeja</button>
+      <button class="btn" id="reset">Reiniciar cerebros</button>
+    </div>
+  </section>
+  <p class="flowdesc" id="flowDesc"></p>
+
+  <main class="grid">
+    <aside class="panel">
+      <div class="panel-head"><h2>Bandeja</h2><span class="hint" id="queueHint"></span></div>
+      <ul class="doclist" id="docList"></ul>
+      <div class="adders">
+        <label class="upload" for="file">Subir documentos de texto (.txt, .md, .csv, .json)
+          <input id="file" type="file" multiple accept=".txt,.md,.csv,.json,.html,.xml,text/*">
+        </label>
+        <details>
+          <summary>Pegar un documento</summary>
+          <input id="pasteTitle" placeholder="Título (opcional)">
+          <textarea id="pasteText" placeholder="Pega aquí el texto de una factura, contrato, informe…"></textarea>
+          <button class="btn" id="pasteAdd">Añadir a la bandeja</button>
+        </details>
+      </div>
+    </aside>
+
+    <section class="panel stage">
+      <div class="stage-head">
+        <h2>Mapa de procesamiento</h2>
+        <span class="now" id="now">En espera</span>
+      </div>
+      <canvas id="bg" aria-hidden="true"></canvas>
+      <div class="svgwrap"><svg id="graph" viewBox="0 0 980 564" role="img" aria-label="Diagrama de agentes, cerebros y salidas"></svg></div>
+      <div class="legend">
+        <span><svg viewBox="-16 -16 32 32"><rect x="-11" y="-11" width="22" height="22" rx="4" fill="#132036" stroke="#3A4F7A"/><circle r="4" fill="#3DE3FF"/></svg>Chip: agente de IA que ejecuta una tarea</span>
+        <span><svg viewBox="-16 -16 32 32"><circle r="11" fill="#140F2A" stroke="#C77DFF" stroke-width="2"/><circle cx="-3" cy="-2" r="1.8" fill="#3DE3FF"/><circle cx="4" cy="3" r="1.8" fill="#3DE3FF"/></svg>Cerebro: aprende y recuerda</span>
+        <span><svg viewBox="-16 -16 32 32"><rect x="-10" y="-13" width="20" height="26" rx="2" fill="#0A1222" stroke="#2B3B5C"/><circle cx="-5" cy="-6" r="1.8" fill="#2EE6B8"/><circle cx="-5" cy="3" r="1.8" fill="#3DE3FF"/></svg>Servidor: cómputo</span>
+        <span><svg viewBox="-16 -16 32 32"><rect x="-13" y="-9" width="26" height="16" rx="2" fill="#0B1A26" stroke="#2EE6B8"/></svg>Pantalla: información entregada</span>
+        <span>El número sobre cada nodo cuenta sus ejecuciones</span>
+      </div>
+    </section>
+
+    <aside class="panel brains">
+      <div class="panel-head" style="margin:0"><h2>Lo que han aprendido</h2></div>
+      <div class="bsec">
+        <h3>Cerebro semántico <span id="semMeta"></span></h3>
+        <div class="cloud" id="cloud"></div>
+      </div>
+      <div class="bsec">
+        <h3>Grafo de conocimiento <span id="grafoMeta"></span></h3>
+        <div class="enttypes" id="entTypes"></div>
+        <ul class="ents" id="entList"></ul>
+      </div>
+      <div class="bsec">
+        <h3>Cerebro episódico <span id="epiMeta"></span></h3>
+        <ul class="episodes" id="episodes"></ul>
+      </div>
+      <div class="bsec">
+        <h3>Curva de aprendizaje <span>confianza del clasificador</span></h3>
+        <svg class="curve" id="curve" viewBox="0 0 280 96" width="100%"></svg>
+        <span class="hint">Reprocesa un documento: el clasificador ya lo conoce y su confianza sube.</span>
+      </div>
+    </aside>
+  </main>
+
+  <section class="bottom">
+    <div class="panel">
+      <div class="panel-head"><h2>Información entregada</h2><span class="hint">las más recientes arriba</span></div>
+      <form class="ask" id="askForm">
+        <input id="q" autocomplete="off" placeholder="Pregunta a los cerebros sobre lo aprendido…" aria-label="Pregunta">
+        <button class="btn primary" type="submit">Preguntar</button>
+      </form>
+      <div class="sugg" id="sugg"></div>
+      <div class="cards" id="cards"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Registro de actividad</h2><span class="hint">cada paso de cada agente</span></div>
+      <ul class="log" id="log"></ul>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ---------- Documentos de ejemplo (ficticios) ---------- */
+const DOCS = [
+  {id:"d1", title:"Factura F-2291", kind:"Factura escaneada", text:
+`Factura N.º F-2291. Proveedor: Suministros Andinos S.A. Cliente: Clínica Horizonte. Fecha de emisión: 03/09/2026. Fecha de vencimiento: 03/10/2026.
+Concepto: 120 licencias de software de gestión, $ 18.400,00. Soporte anual: $ 4.250,00. Capacitación presencial: $ 2.900,00.
+Subtotal: $ 25.550,00. IVA 16%: $ 4.088,00. Total a pagar: $ 29.638,00.
+El pago se realizará por transferencia bancaria. Contacto de cobranza: cobranza@suministrosandinos.example.`},
+  {id:"d2", title:"Contrato Nube Segura", kind:"Contrato PDF", text:
+`Contrato de prestación de servicios entre Clínica Horizonte y Nube Segura Ltda. La vigencia es de 24 meses a partir del 15 de octubre de 2026.
+El proveedor garantiza una disponibilidad del 99,5% del servicio. En caso de incumplimiento se aplicará una penalización del 10% de la cuota mensual.
+La cuota mensual del servicio es de $ 7.800,00. Cualquiera de las partes podrá solicitar la rescisión con aviso previo de 60 días.
+La información de pacientes es confidencial y no podrá compartirse con terceros. La responsabilidad del proveedor queda limitada al monto pagado en los últimos 12 meses.
+Cláusula de exclusividad: la clínica no contratará servicios similares durante la vigencia.`},
+  {id:"d3", title:"CV Mariana Robles", kind:"Currículum", text:
+`Currículum de Mariana Robles Ferrer. Ingeniera de datos con 7 años de experiencia en proyectos de salud.
+Experiencia en Python, SQL, Spark y modelos de aprendizaje automático. Lideró la migración de datos clínicos en Hospital Central Norte entre 2021 y 2024.
+Certificación en arquitectura de nube. Idiomas: español nativo e inglés avanzado.
+Habilidades: liderazgo de equipos, comunicación y análisis estadístico. Disponibilidad inmediata. Pretensión salarial: $ 3.200,00 mensuales.
+Correo: mariana.robles@correo.example.`},
+  {id:"d4", title:"Ticket de soporte #4471", kind:"Correo de soporte", text:
+`Ticket #4471. Cliente: Farmacia del Valle. Prioridad alta.
+El sistema de facturación no responde desde el 21/09/2026 y los usuarios no pueden emitir comprobantes. Se reinició el servidor sin éxito.
+El cliente reporta pérdidas estimadas de $ 1.500,00 por día. Solicitan escalamiento urgente al equipo de infraestructura.
+Error reportado: tiempo de espera agotado en la base de datos. Usuario afectado: soporte@farmaciadelvalle.example.`},
+  {id:"d5", title:"Acta del comité directivo", kind:"Acta de reunión", text:
+`Acta de reunión del comité de dirección, 18 de septiembre de 2026. Asistentes: Laura Méndez, Tomás Ibarra y Sofía Castaño.
+Se aprobó el presupuesto de $ 120.000,00 para el proyecto de digitalización. Se acordó migrar los expedientes clínicos a la nube antes del 30/11/2026.
+Riesgo identificado: retraso del proveedor en la entrega de licencias. Tomás Ibarra será responsable del seguimiento semanal.
+Próxima reunión: 2 de octubre de 2026.`}
+];
+
+/* ---------- Flujos, nodos ---------- */
+const FLOWS = [
+  {id:"resumen", name:"Resumen ejecutivo", outName:"un resumen ejecutivo", path:["inbox","lector","extractor","sem","analista","o_resumen"],
+   gives:"las ideas clave y los términos más relevantes de cada documento"},
+  {id:"montos", name:"Auditoría de montos", outName:"un informe de montos", path:["inbox","lector","extractor","grafo","auditor","o_alertas"],
+   gives:"montos detectados, cuadre de totales y vencimientos próximos"},
+  {id:"riesgo", name:"Riesgo y cumplimiento", outName:"una matriz de riesgo", path:["inbox","lector","clasif","epi","auditor","o_riesgos"],
+   gives:"cláusulas sensibles, nivel de riesgo y comparación con casos anteriores"},
+  {id:"qa", name:"Preguntas y respuestas", outName:"respuestas automáticas", path:["inbox","lector","extractor","clasif","sem","asesor","o_resp"],
+   gives:"respuestas en lenguaje natural sobre el documento y todo lo aprendido"}
+];
+const FLOW = Object.fromEntries(FLOWS.map(f=>[f.id,f]));
+const NODES = {
+  inbox:{x:70,y:240,label:"Bandeja",sub:"documentos",kind:"io"},
+  lector:{x:200,y:240,label:"Lector",sub:"parseo y tokens",kind:"agent"},
+  extractor:{x:350,y:130,label:"Extractor",sub:"entidades y datos",kind:"agent"},
+  clasif:{x:350,y:360,label:"Clasificador",sub:"tipo de documento",kind:"agent"},
+  sem:{x:530,y:105,label:"Semántico",sub:"conceptos",kind:"brain"},
+  epi:{x:530,y:245,label:"Episódico",sub:"casos vividos",kind:"brain"},
+  grafo:{x:530,y:385,label:"Grafo",sub:"relaciones",kind:"brain"},
+  analista:{x:715,y:110,label:"Analista",sub:"síntesis",kind:"agent"},
+  auditor:{x:715,y:260,label:"Auditor",sub:"control",kind:"agent"},
+  asesor:{x:715,y:405,label:"Asesor",sub:"respuestas",kind:"agent"},
+  o_resumen:{x:900,y:75,label:"Resumen",kind:"out",flow:"resumen"},
+  o_alertas:{x:900,y:190,label:"Montos",kind:"out",flow:"montos"},
+  o_riesgos:{x:900,y:305,label:"Riesgos",kind:"out",flow:"riesgo"},
+  o_resp:{x:900,y:420,label:"Respuestas",kind:"out",flow:"qa"}
+};
+
+/* ---------- Utilidades de texto ---------- */
+const STOP = new Set(("a al algo algunas algunos ante antes como con contra cual cuales cuando cuanto cuanta cuantos de del desde donde durante e el ella ellas ellos en entre era es esa ese eso esta este esto estos estas esta fue ha han hasta hay la las le les lo los mas me mi muy no nos o otra otro para pero por porque que quien quienes se ser si sin sobre su sus tambien te tiene tienen tu un una uno unos unas y ya cada son dos ni sera seran podra puede segun mismo misma cualquiera desde este cual hace hacer dia dias sus fue van via").split(" "));
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const words = s => (s.toLowerCase().match(/[a-záéíóúüñ]{3,}/g)||[]).filter(w=>!STOP.has(norm(w)));
+const stem = w => { const n=norm(w); return n.length>6 ? n.slice(0,6) : n; };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => "$ " + n.toLocaleString("es",{minimumFractionDigits:2,maximumFractionDigits:2});
+const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const TODAY = (()=>{const d=new Date(); d.setHours(0,0,0,0); return d;})();
+
+function splitSentences(text){
+  return text.replace(/\s+/g," ").trim()
+    .split(/(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡#])/)
+    .map(s=>s.trim()).filter(s=>s.length>12);
+}
+function parseAmount(s){
+  const d = s.replace(/[^\d.,]/g,"");
+  const lc=d.lastIndexOf(","), lp=d.lastIndexOf(".");
+  let dec=-1;
+  if(lc>-1 && lp>-1) dec=Math.max(lc,lp);
+  else { const i=Math.max(lc,lp); if(i>-1 && d.length-i-1===2 && (d.match(/[.,]/g)||[]).length===1) dec=i; }
+  const ip = dec>-1 ? d.slice(0,dec) : d, fr = dec>-1 ? d.slice(dec+1) : "";
+  return parseFloat(ip.replace(/[.,]/g,"") + (fr ? "."+fr : ""));
+}
+function parseDate(s){
+  let m = s.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
+  m = norm(s).match(/(\d{1,2}) de ([a-z]+)(?: de (\d{4}))?/);
+  if(m){ const mi=MONTHS.indexOf(m[2]); if(mi>-1) return new Date(m[3]?+m[3]:TODAY.getFullYear(), mi, +m[1]); }
+  return null;
+}
+const GENERIC = new Set(["curriculum","contrato","acta","ticket","cliente","proveedor","factura","asistentes","usuario","contacto","correo","concepto"]);
+const ORGISH = /cl[ií]nica|hospital|farmacia|s\.a\.|ltda|suministros|nube|comit[eé]|banco|grupo|universidad|empresa|corporaci/i;
+
+function extractEntities(text){
+  const ents=[]; const seen=new Set();
+  const add=(type,value,extra={})=>{ const k=type+"|"+norm(value); if(seen.has(k)) return; seen.add(k); ents.push({type,value,...extra}); };
+  const ctxOf = idx => { const pre=text.slice(Math.max(0,idx-40), idx); const part=pre.split(/[.:;\n]/).filter(p=>p.trim()).pop()||pre; return part.trim().split(/\s+/).slice(-4).join(" ").replace(/[,(]$/,""); };
+  for(const m of text.matchAll(/(?:US\$|\$|€)\s?\d[\d.,]*\d|\d[\d.,]*\d\s?(?:USD|MXN|EUR|pesos|dólares)/gi))
+    add("monto", m[0].trim(), {num:parseAmount(m[0]), ctx:ctxOf(m.index), idx:m.index});
+  for(const m of text.matchAll(/\b\d{1,2}[\/-]\d{1,2}[\/-]\d{4}\b/g)) add("fecha", m[0], {date:parseDate(m[0]), ctx:ctxOf(m.index)});
+  const mrx = new RegExp("\\b\\d{1,2} de (?:"+MONTHS.join("|")+")(?: de \\d{4})?","gi");
+  for(const m of text.matchAll(mrx)) add("fecha", m[0], {date:parseDate(m[0]), ctx:ctxOf(m.index)});
+  for(const m of text.matchAll(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g)) add("correo", m[0]);
+  for(const m of text.matchAll(/\d+(?:[.,]\d+)?\s?%/g)) add("porcentaje", m[0].replace(/\s/g,""));
+  for(const m of text.matchAll(/\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+(?:del?\s+)?[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)+(?:\s+(?:S\.A\.|Ltda\.?))?/g)){
+    let parts = m[0].split(/\s+/);
+    while(parts.length && GENERIC.has(norm(parts[0]))){ parts.shift(); if(parts[0] && /^del?$/.test(parts[0])) parts.shift(); }
+    if(parts.length<2) continue;
+    const v = parts.join(" ");
+    add(ORGISH.test(v) ? "org" : "persona", v);
+  }
+  return ents;
+}
+const TYPE_ONE = {monto:"monto",fecha:"fecha",correo:"correo",porcentaje:"porcentaje",persona:"persona",org:"organización"};
+const TYPE_LABEL = {monto:"montos",fecha:"fechas",correo:"correos",porcentaje:"porcentajes",persona:"personas",org:"organizaciones"};
+function entSummary(ents){
+  const c={}; ents.forEach(e=>c[e.type]=(c[e.type]||0)+1);
+  return Object.entries(c).map(([t,n])=>`${n} ${n===1?TYPE_ONE[t]:TYPE_LABEL[t]}`).join(" · ");
+}
+
+/* ---------- Clasificador que aprende ---------- */
+const CLASSES = {
+  factura:{label:"Factura", seed:"factura total iva subtotal pago vencimiento proveedor concepto cobranza"},
+  contrato:{label:"Contrato", seed:"contrato clausula vigencia partes rescision penalizacion prestacion"},
+  cv:{label:"Currículum", seed:"curriculum experiencia habilidades idiomas certificacion ingeniera formacion"},
+  ticket:{label:"Ticket de soporte", seed:"ticket error prioridad usuario sistema servidor escalamiento"},
+  acta:{label:"Acta de reunión", seed:"acta reunion asistentes acordo aprobo comite seguimiento"}
+};
+let proto;
+function seedProto(){ proto={}; for(const k in CLASSES){ proto[k]=new Map(); CLASSES[k].seed.split(" ").forEach(w=>proto[k].set(stem(w),1)); } }
+function classify(stems){
+  const scores={}; let best=null;
+  for(const k in proto){ let s=0; for(const t of stems) s+=proto[k].get(t)||0; scores[k]=s; if(!best||s>scores[best]) best=k; }
+  if(scores[best]===0) return {key:"otro", label:"Documento general", pct:20};
+  const tot = Object.values(scores).reduce((a,s)=>a+s+0.6,0);
+  return {key:best, label:CLASSES[best].label, pct:Math.round((scores[best]+0.6)/tot*100)};
+}
+
+/* ---------- Cerebros ---------- */
+let brain;
+function resetBrain(){
+  seedProto();
+  brain = {tokens:0, docs:0, learned:new Set(), df:new Map(), vocab:new Map(), sentences:[], entities:new Map(), links:new Map(), events:[], curve:[]};
+}
+const idf = t => Math.log((brain.docs+1)/((brain.df.get(t)||0)+1)) + 1;
+
+function analyze(doc){
+  const ws = words(doc.text), tf=new Map(), wordOf=new Map();
+  ws.forEach(w=>{ const s=stem(w); tf.set(s,(tf.get(s)||0)+1); if(!wordOf.has(s)) wordOf.set(s,w); });
+  const sents = splitSentences(doc.text);
+  const ents = extractEntities(doc.text);
+  const cls = classify([...tf.keys()]);
+  return {doc, words:ws, tf, wordOf, sents, ents, cls};
+}
+
+function learn(an, flow){
+  const st = {fresh:false,newTerms:0,newEnts:0,newLinks:0};
+  if(!brain.learned.has(an.doc.id)){
+    st.fresh=true; brain.learned.add(an.doc.id); brain.docs++;
+    for(const [s,c] of an.tf){
+      brain.df.set(s,(brain.df.get(s)||0)+1);
+      const v = brain.vocab.get(s); if(v) v.count+=c; else { brain.vocab.set(s,{word:an.wordOf.get(s),count:c}); st.newTerms++; }
+    }
+    an.sents.forEach(s=>brain.sentences.push({text:s, doc:an.doc.title, stems:new Set(words(s).map(stem)),
+      hasAmt:/\$\s?\d/.test(s), hasDate:/\d{1,2}[\/-]\d{1,2}[\/-]\d{4}|\d{1,2} de [a-z]+/i.test(s), hasName:/[A-ZÁÉÍÓÚ][a-záéíóú]+ [A-ZÁÉÍÓÚ][a-záéíóú]+/.test(s)}));
+    const named=[];
+    an.ents.forEach(e=>{ const k=e.type+"|"+norm(e.value); let x=brain.entities.get(k);
+      if(!x){ x={type:e.type,value:e.value,docs:new Set()}; brain.entities.set(k,x); st.newEnts++; }
+      x.docs.add(an.doc.title); if(["persona","org","correo"].includes(e.type)) named.push(k); });
+    for(let i=0;i<named.length;i++) for(let j=i+1;j<named.length;j++){
+      const k=[named[i],named[j]].sort().join("~"); if(!brain.links.has(k)) st.newLinks++; brain.links.set(k,(brain.links.get(k)||0)+1); }
+    // refuerza el prototipo del tipo detectado con los términos más frecuentes
+    if(proto[an.cls.key]){
+      [...an.tf.entries()].sort((a,b)=>b[1]-a[1]).slice(0,12).forEach(([s])=>{ const p=proto[an.cls.key]; p.set(s, Math.min(3,(p.get(s)||0)+0.4)); });
+    }
+  }
+  brain.events.unshift({n:brain.events.length+1, doc:an.doc.title, docId:an.doc.id, flow:flow.id, cls:an.cls.key, label:an.cls.label, pct:an.cls.pct, t:clock()});
+  brain.curve.push({pct:an.cls.pct, doc:an.doc.title}); brain.tokens+=an.words.length; gpuSpike();
+  renderBrains(); renderStats();
+  return st;
+}
+
+/* ---------- Constructores de información ---------- */
+function summarize(an){
+  const scored = an.sents.map((s,i)=>{ const st=[...new Set(words(s).map(stem))]; let sc=0; st.forEach(t=>sc+=(an.tf.get(t)||0)*idf(t)); return {s,i,sc:sc/Math.sqrt(st.length+1)}; });
+  const top = scored.sort((a,b)=>b.sc-a.sc).slice(0,2).sort((a,b)=>a.i-b.i).map(x=>x.s);
+  const terms = [...an.tf.entries()].map(([t,c])=>({w:an.wordOf.get(t), v:c*idf(t)})).sort((a,b)=>b.v-a.v).slice(0,7).map(x=>x.w);
+  return {top, terms};
+}
+function labelAmount(text, label){
+  const m = text.match(new RegExp(label+"[^$\\n]{0,24}\\$\\s?([\\d.,]*\\d)","i")); return m ? parseAmount(m[1]) : null;
+}
+const RISK = [
+  {k:"penalizaci",label:"Penalización",w:3},{k:"incumplimiento",label:"Incumplimiento",w:3},{k:"perdidas",label:"Pérdidas económicas",w:3},
+  {k:"rescision",label:"Rescisión",w:2},{k:"confidencial",label:"Confidencialidad",w:2},{k:"responsabilidad",label:"Responsabilidad limitada",w:2},
+  {k:"exclusividad",label:"Exclusividad",w:2},{k:"retraso",label:"Retraso",w:2},{k:"urgente",label:"Urgencia",w:2},{k:"riesgo",label:"Riesgo declarado",w:2},
+  {k:"error",label:"Falla técnica",w:1},{k:"vencimiento",label:"Vencimiento",w:1},{k:"terceros",label:"Terceros",w:1}
+];
+function highlight(sentence, k){
+  const i = norm(sentence).indexOf(k); if(i<0) return esc(sentence);
+  let j=i+k.length; while(j<sentence.length && /[\wáéíóúñ]/i.test(sentence[j])) j++;
+  return esc(sentence.slice(0,i))+"<mark>"+esc(sentence.slice(i,j))+"</mark>"+esc(sentence.slice(j));
+}
+const relDays = d => { const n=Math.round((d-TODAY)/864e5); return n===0?"hoy":n>0?`en ${n} días`:`hace ${-n} días`; };
+
+function buildOutput(flowId, an){
+  const out = {flow:flowId, doc:an.doc.title, time:clock()};
+  const clsLine = `<span class="label">Tipo detectado</span> ${esc(an.cls.label)} · ${an.cls.pct}%`;
+  if(flowId==="resumen"){
+    const s=summarize(an);
+    out.title="Resumen ejecutivo";
+    out.body = `<p>${clsLine}</p><ul>${s.top.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+      <div><div class="label">Términos clave</div><div class="chips">${s.terms.map(t=>`<span class="chip">${esc(t)}</span>`).join("")}</div></div>`;
+  }
+  if(flowId==="montos"){
+    out.title="Auditoría de montos";
+    const am = an.ents.filter(e=>e.type==="monto"), ds = an.ents.filter(e=>e.type==="fecha"&&e.date);
+    let h = `<p>${clsLine}</p>`;
+    if(am.length){
+      h += `<div class="tbl"><table><thead><tr><th>Concepto</th><th style="text-align:right">Monto</th><th>Nota</th></tr></thead><tbody>${
+        am.map(a=>`<tr><td>${esc(a.ctx||"—")}</td><td class="num">${money(a.num)}</td><td>${a.num>=10000?'<span class="pill p-warn">monto alto</span>':""}</td></tr>`).join("")}</tbody></table></div>`;
+      const sub=labelAmount(an.doc.text,"subtotal"), iva=labelAmount(an.doc.text,"\\biva"), tot=labelAmount(an.doc.text,"\\btotal");
+      if(sub!=null && iva!=null && tot!=null){
+        const ok = Math.abs(sub+iva-tot)<0.01;
+        h += `<p>${ok?'<span class="pill p-ok">cuadre correcto</span>':'<span class="pill p-bad">no cuadra</span>'} Subtotal ${money(sub)} + IVA ${money(iva)} = ${money(sub+iva)} ${ok?"coincide con":"frente a"} total ${money(tot)}.</p>`;
+      } else {
+        const max = Math.max(...am.map(a=>a.num));
+        h += `<p>Monto mayor: <b>${money(max)}</b>. Sin estructura subtotal + impuesto que verificar.</p>`;
+      }
+    } else h += `<p>No se encontraron montos en el documento.</p>`;
+    if(ds.length) h += `<div><div class="label">Fechas</div><ul>${ds.map(d=>`<li>${esc(d.value)} <span class="src">${esc(d.ctx||"")}</span> — ${relDays(d.date)}</li>`).join("")}</ul></div>`;
+    out.body=h;
+  }
+  if(flowId==="riesgo"){
+    out.title="Riesgo y cumplimiento";
+    const hits=[]; RISK.forEach(r=>{ const s=an.sents.find(x=>norm(x).includes(r.k)); if(s) hits.push({...r,s}); });
+    const score = Math.min(100, Math.round(hits.reduce((a,h)=>a+h.w,0)/12*100));
+    const lvl = score>=60?["alto","p-bad"]:score>=30?["medio","p-warn"]:["bajo","p-ok"];
+    const prev = brain.events.filter(e=>e.cls===an.cls.key && e.docId!==an.doc.id);
+    const prevDocs = [...new Set(prev.map(e=>e.doc))];
+    out.body = `<p>${clsLine}</p>
+      <div class="${lvl[1]}" style="display:flex;flex-direction:column;gap:4px"><div>Nivel de riesgo <span class="pill">${lvl[0]} · ${score}/100</span></div><div class="meter"><i style="width:${score}%"></i></div></div>
+      ${hits.length?`<ul>${hits.slice(0,5).map(h=>`<li><b>${h.label}.</b> ${highlight(h.s,h.k)}</li>`).join("")}</ul>`:"<p>No se detectaron cláusulas sensibles.</p>"}
+      <p class="src">Memoria episódica: ${prevDocs.length?`se parece a ${prevDocs.length} caso(s) anterior(es): ${esc(prevDocs.join(", "))}`:"no hay casos anteriores del mismo tipo"}.</p>`;
+  }
+  if(flowId==="qa"){
+    out.title="Preguntas y respuestas";
+    const who = an.ents.filter(e=>e.type==="persona"||e.type==="org").map(e=>e.value);
+    const am = an.ents.filter(e=>e.type==="monto"); const ds=an.ents.filter(e=>e.type==="fecha");
+    const s = summarize(an);
+    out.body = `<dl class="qa">
+      <dt>¿Qué es este documento?</dt><dd>${esc(an.cls.label)} (${an.cls.pct}% de confianza). ${esc(s.top[0]||"")}</dd>
+      <dt>¿Quiénes participan?</dt><dd>${who.length?esc(who.join(", ")):"No se identificaron personas ni organizaciones."}</dd>
+      <dt>¿Qué cifras y fechas menciona?</dt><dd>${am.length?am.map(a=>money(a.num)).join(", "):"Sin montos"}${ds.length?" · "+ds.map(d=>esc(d.value)).join(", "):""}</dd>
+    </dl><p class="src">Escribe arriba para preguntar sobre todo lo aprendido, no solo este documento.</p>`;
+  }
+  return out;
+}
+
+function answer(q){
+  const qs=[...new Set(words(q).map(stem))];
+  const wantAmt=/cu[aá]nt|monto|total|pagar|precio|costo|cuota|presupuesto|salari/i.test(q);
+  const wantDate=/cu[aá]ndo|fecha|plazo|vence|vigencia|pr[oó]xim/i.test(q);
+  const wantWho=/qui[eé]n|responsable|nombre|contacto|asist/i.test(q);
+  const res = brain.sentences.map(s=>{ let sc=0; qs.forEach(t=>{ if(s.stems.has(t)) sc+=idf(t); });
+      if(sc>0){ if(wantAmt&&s.hasAmt) sc+=1.5; if(wantDate&&s.hasDate) sc+=1.5; if(wantWho&&s.hasName) sc+=1.2; } return {s,sc}; })
+    .filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,2);
+  const out = {flow:"qa", title:"Respuesta del Asesor", doc:"consulta", time:clock()};
+  out.body = `<p><span class="label">Pregunta</span> ${esc(q)}</p>` + (res.length
+    ? `<ul>${res.map(r=>`<li>${esc(r.s.text)} <span class="src">— ${esc(r.s.doc)} · relevancia ${Math.min(99,Math.round(35+r.sc*9))}%</span></li>`).join("")}</ul>`
+    : `<p>Los cerebros todavía no han aprendido nada relacionado. Procesa más documentos y vuelve a preguntar.</p>`);
+  return {out, n:res.length};
+}
+
+/* ---------- Dibujo del grafo ---------- */
+const NS="http://www.w3.org/2000/svg", svg=document.getElementById("graph");
+function el(tag, attrs, parent){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(parent) parent.appendChild(e); return e; }
+[["CAPTURA",70],["INGESTA",200],["AGENTES IA",350],["CEREBROS",530],["AGENTES IA",715],["SALIDAS",900]].forEach(([t,x])=>{ const e=el("text",{x,y:26,"text-anchor":"middle",class:"colhead"},svg); e.textContent=t; });
+const gE=el("g",{},svg), gN=el("g",{},svg), gP=el("g",{},svg);
+const EDGES=new Map();
+FLOWS.forEach(f=>f.path.forEach((a,i)=>{ if(i===0) return; const k=f.path[i-1]+">"+a; if(EDGES.has(k)) return;
+  const A=NODES[f.path[i-1]], B=NODES[a]; let d;
+  if(Math.abs(B.x-A.x)<20) d=`M${A.x},${A.y} C${A.x+85},${A.y} ${B.x+85},${B.y} ${B.x},${B.y}`;
+  else { const m=(B.x-A.x)*.5; d=`M${A.x},${A.y} C${A.x+m},${A.y} ${B.x-m},${B.y} ${B.x},${B.y}`; }
+  EDGES.set(k, el("path",{d,class:"edge"},gE)); }));
+
+const NG={};
+const defs=el("defs",{},svg);
+defs.innerHTML=`<linearGradient id="chipFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A2A48"/><stop offset="1" stop-color="#0B1426"/></linearGradient>`;
+const BLOB=[[-17,-9,14],[0,-15,15],[17,-9,14],[-23,7,12],[23,7,12],[-9,12,13],[9,12,13],[0,2,14]];
+const GYRI=["M0,-29 C-3,-16 3,-6 0,4 C-3,13 2,19 0,24","M-30,-3 C-22,-10 -15,-1 -8,-8","M-28,11 C-20,4 -13,15 -6,7","M-15,-22 C-10,-15 -17,-8 -11,-1",
+  "M30,-3 C22,-10 15,-1 8,-8","M28,11 C20,4 13,15 6,7","M15,-22 C10,-15 17,-8 11,-1"];
+const NEU=[[-20,-6],[-12,-18],[-4,-6],[-22,10],[-11,16],[-7,3],[20,-6],[12,-18],[4,-6],[22,10],[11,16],[7,3],[0,-20],[0,14]];
+function drawBrain(g,o){
+  el("circle",{r:40,class:"halo2"},g);
+  o.orbit=el("circle",{r:44,class:"orbit"},g);
+  const b=el("g",{class:"bbody"},g); o.body=b;
+  BLOB.forEach(([cx,cy,r])=>el("circle",{cx,cy,r,class:"lobe-s"},b));
+  BLOB.forEach(([cx,cy,r])=>el("circle",{cx,cy,r,class:"lobe-f"},b));
+  const t=el("g",{opacity:.16},b); BLOB.forEach(([cx,cy,r])=>el("circle",{cx,cy,r,class:"lobe-t"},t));
+  GYRI.forEach(d=>el("path",{d,class:"gyri"},b));
+  for(let i=0;i<NEU.length;i++){ const j=(i*5+3)%NEU.length; el("line",{x1:NEU[i][0],y1:NEU[i][1],x2:NEU[j][0],y2:NEU[j][1],class:"syn"},b); }
+  o.neurons=NEU.map(([cx,cy],i)=>{ const c=el("circle",{cx,cy,r:1.9,class:"neuron"},b); c.style.animationDelay=(i*0.37%2.4).toFixed(2)+"s"; return c; });
+}
+function drawRack(g){
+  el("rect",{x:-30,y:-36,width:60,height:72,rx:5,class:"rack"},g);
+  for(let u=0;u<4;u++){ const y=-31+u*16.5;
+    el("rect",{x:-25,y,width:50,height:13,rx:2,class:"unit"},g);
+    const l1=el("circle",{cx:-19,cy:y+6.5,r:1.8,class:"led"},g), l2=el("circle",{cx:-13,cy:y+6.5,r:1.8,class:"led c"},g);
+    l1.style.animationDelay=(u*.31)+"s"; l2.style.animationDelay=(u*.53+.2)+"s";
+    el("line",{x1:-6,x2:19,y1:y+4.5,y2:y+4.5,class:"slot"},g); el("line",{x1:-6,x2:19,y1:y+8.5,y2:y+8.5,class:"slot"},g);
+  }
+}
+function drawChip(g){
+  for(let i=-2;i<=2;i++){ const k=i*9;
+    el("line",{x1:k,x2:k,y1:-31,y2:-24,class:"pin"},g); el("line",{x1:k,x2:k,y1:24,y2:31,class:"pin"},g);
+    el("line",{x1:-31,x2:-24,y1:k,y2:k,class:"pin"},g); el("line",{x1:24,x2:31,y1:k,y2:k,class:"pin"},g); }
+  el("rect",{x:-24,y:-24,width:48,height:48,rx:7,class:"chip"},g);
+  [[-13,-13,-20,-20],[13,-13,20,-20],[-13,13,-20,20],[13,13,20,20]].forEach(([a,b,c,d])=>el("line",{x1:a,y1:b,x2:c,y2:d,class:"trace"},g));
+  el("rect",{x:-13,y:-13,width:26,height:26,rx:4,class:"die"},g);
+  el("circle",{r:5,class:"core2"},g);
+}
+function drawDocs(g){
+  [[8,-8],[4,-4],[0,0]].forEach(([dx,dy])=>{
+    el("path",{d:`M${-20+dx},${-26+dy} h28 l10,10 v42 h-38 z`,class:"sheet"},g);
+    if(dx===0) for(let i=0;i<5;i++) el("line",{x1:-14,x2:i%2?4:10,y1:-12+i*7,y2:-12+i*7,class:"sheet-l"},g);
+  });
+}
+for(const [id,n] of Object.entries(NODES)){
+  const g=el("g",{class:"node "+n.kind,transform:`translate(${n.x},${n.y})`},gN); const o={g};
+  o.ring=el("circle",{r:42,class:"ring"},g);
+  let ly=46, bx=26, by=-26;
+  if(n.kind==="brain"){ drawBrain(g,o); ly=54; bx=32; by=-32; }
+  else if(id==="lector"){ drawRack(g); ly=52; bx=30; by=-36; }
+  else if(n.kind==="io"){ drawDocs(g); ly=42; bx=24; by=-34; }
+  else if(n.kind==="agent"){ drawChip(g); }
+  if(n.kind==="out"){
+    g.style.setProperty("--oc",`var(--f-${n.flow})`);
+    el("path",{d:"M-9,16 L-13,26 L13,26 L9,16 Z",class:"stand"},g);
+    el("rect",{x:-56,y:-22,width:112,height:40,rx:5,class:"screen"},g);
+    el("circle",{cx:-40,cy:-2,r:4.5,class:"dot"},g);
+    el("text",{x:-29,y:2.5,class:"nlabel"},g).textContent=n.label;
+    bx=54; by=-22;
+  } else {
+    el("text",{y:ly,"text-anchor":"middle",class:"nlabel"},g).textContent=n.label;
+    el("text",{y:ly+13,"text-anchor":"middle",class:"nsub"},g).textContent=id==="lector"?"servidor de ingesta":n.sub;
+  }
+  o.badge=el("g",{class:"badge",transform:`translate(${bx},${by})`},g); o.badge.style.display="none";
+  el("circle",{r:9},o.badge); o.count=el("text",{y:3.5,"text-anchor":"middle"},o.badge); o.n=0;
+  NG[id]=o;
+}
+/* clúster GPU que alimenta a los cerebros */
+const GPU=[];
+(()=>{ const g=el("g",{},gN);
+  el("text",{x:530,y:484,"text-anchor":"middle",class:"colhead"},g).textContent="CLÚSTER GPU";
+  el("line",{x1:420,x2:640,y1:494,y2:494,class:"slot"},g);
+  for(let i=0;i<4;i++){ const x=425+i*57;
+    el("line",{x1:x+23,x2:x+23,y1:494,y2:502,class:"slot"},g);
+    el("rect",{x,y:502,width:46,height:40,rx:4,class:"rack"},g);
+    for(let u=0;u<2;u++){ const l=el("circle",{cx:x+7,cy:510+u*10,r:1.7,class:"led"+(u?" c":"")},g); l.style.animationDelay=(i*.27+u*.4)+"s";
+      el("line",{x1:x+13,x2:x+39,y1:510+u*10,y2:510+u*10,class:"slot"},g); }
+    el("rect",{x:x+6,y:531,width:34,height:5,rx:2,class:"gputrack"},g);
+    const bar=el("rect",{x:x+6,y:531,width:5,height:5,rx:2,class:"gpubar"},g);
+    el("text",{x:x+23,y:556,"text-anchor":"middle",class:"nsub"},g).textContent="GPU-0"+(i+1);
+    GPU.push({bar,load:.12});
+  }
+})();
+function gpuSpike(){ GPU.forEach(g=>g.load=Math.min(1,g.load+.45+Math.random()*.4)); }
+function bump(id){ const o=NG[id]; o.n++; o.count.textContent=o.n>99?"99+":o.n; o.badge.style.display="";
+  if(!reduced && o.ring.animate) o.ring.animate([{opacity:.7,transform:"scale(1)"},{opacity:0,transform:"scale(1.35)"}],{duration:650,easing:"ease-out"}); }
+
+let currentFlow="resumen";
+function paintFlow(){
+  const f=FLOW[currentFlow]; svg.style.setProperty("--flow",`var(--f-${f.id})`);
+  const on=new Set(f.path.slice(1).map((b,i)=>f.path[i]+">"+b));
+  EDGES.forEach((p,k)=>p.classList.toggle("active",on.has(k)));
+  for(const id in NG) NG[id].g.classList.toggle("dim",!f.path.includes(id));
+  document.getElementById("flowDesc").innerHTML = `<b>${f.name}</b> entrega ${f.gives}. <span class="path">${f.path.map(id=>NODES[id].label).join(" → ")}</span>`;
+  document.querySelectorAll(".flow-btn").forEach(b=>b.setAttribute("aria-checked", b.dataset.id===currentFlow));
+}
+
+/* ---------- Motor de partículas ---------- */
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SPEEDS=[1500,1050,720,460,240];
+const speedEl=document.getElementById("speed");
+const segMs=()=> reduced ? 160 : SPEEDS[speedEl.value-1];
+const parts=[];
+function spawn(path, color, onArrive, done){
+  const trail=[0,1,2,3,4,5].map(k=>{ const c=el("circle",{r:(4.6-k*.65).toFixed(2),class:"trail",opacity:(.55-k*.085).toFixed(2)},gP); c.style.setProperty("--pc",color); return c; });
+  const dot=el("circle",{r:5.5,class:"particle"},gP); dot.style.setProperty("--pc",color);
+  const halo={remove(){trail.forEach(c=>c.remove())}};
+  const p={path,seg:0,t:0,halo,trail,dot,onArrive,done}; parts.push(p); onArrive(path[0],0); place(p);
+}
+function place(p){
+  const e=EDGES.get(p.path[p.seg]+">"+p.path[p.seg+1]); if(!e) return;
+  const L=e.getTotalLength(), pt=e.getPointAtLength(L*p.t);
+  p.dot.setAttribute("cx",pt.x); p.dot.setAttribute("cy",pt.y);
+  p.trail.forEach((c,k)=>{ const q=e.getPointAtLength(Math.max(0,L*p.t-(k+1)*7)); c.setAttribute("cx",q.x); c.setAttribute("cy",q.y); });
+}
+let last=performance.now();
+function tick(now){
+  const dt=Math.min(64,now-last); last=now;
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i]; p.t+=dt/segMs();
+    if(p.t>=1){ p.seg++; p.t=0; p.onArrive(p.path[p.seg], p.seg);
+      if(p.seg>=p.path.length-1){ p.dot.remove(); p.halo.remove(); parts.splice(i,1); p.done&&p.done(); continue; } }
+    place(p);
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+let gpuT=0;
+function gpuLoop(now){
+  GPU.forEach(g=>{ g.load+=(0.12+(busy?.35:0)+Math.random()*.05-g.load)*0.02; g.bar.setAttribute("width",(34*Math.max(.08,g.load)).toFixed(1)); });
+  if(now-gpuT>400){ gpuT=now; const e=document.getElementById("gpuPct"); if(e) e.textContent=Math.round(GPU.reduce((a,g)=>a+g.load,0)/GPU.length*100)+"%"; }
+  requestAnimationFrame(gpuLoop);
+}
+requestAnimationFrame(gpuLoop);
+(()=>{ const cv=document.getElementById("bg"), cx=cv.getContext("2d"); let W=0,H=0; const pts=[];
+  for(let i=0;i<46;i++) pts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.00025,vy:(Math.random()-.5)*.00025});
+  const size=()=>{ const r=cv.getBoundingClientRect(), d=devicePixelRatio||1; W=r.width; H=r.height; cv.width=W*d; cv.height=H*d; cx.setTransform(d,0,0,d,0,0); if(reduced) draw(); };
+  function draw(){
+    cx.clearRect(0,0,W,H);
+    pts.forEach(p=>{ if(!reduced){ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>1) p.vx*=-1; if(p.y<0||p.y>1) p.vy*=-1; } });
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+      const a=pts[i], b=pts[j], dx=(a.x-b.x)*W, dy=(a.y-b.y)*H, d=Math.hypot(dx,dy);
+      if(d<120){ cx.strokeStyle=`rgba(61,227,255,${((1-d/120)*.14).toFixed(3)})`; cx.lineWidth=1; cx.beginPath(); cx.moveTo(a.x*W,a.y*H); cx.lineTo(b.x*W,b.y*H); cx.stroke(); } }
+    pts.forEach((p,i)=>{ cx.fillStyle=i%3?"rgba(61,227,255,.35)":"rgba(199,125,255,.45)"; cx.beginPath(); cx.arc(p.x*W,p.y*H,1.6,0,7); cx.fill(); });
+    if(!reduced) requestAnimationFrame(draw);
+  }
+  new ResizeObserver(size).observe(cv); size(); if(!reduced) draw();
+})();
+
+/* ---------- Orquestación ---------- */
+const queue=[]; let busy=false;
+function enqueue(doc, flowId=currentFlow){ if(doc.status==="queued"||doc.status==="processing") return; doc.status="queued"; queue.push({doc,flowId}); renderDocs(); pump(); }
+function pump(){
+  if(busy||!queue.length) return; busy=true;
+  const {doc,flowId}=queue.shift(); const flow=FLOW[flowId]; const an=analyze(doc);
+  spawn(flow.path, `var(--f-${flow.id})`, (id,i)=>{ handleNode(id,an,flow); setNow(doc,flow,i); }, ()=>{ busy=false; setNow(); pump(); });
+  renderDocs();
+}
+function handleNode(id, an, flow){
+  const N=NODES[id]; bump(id);
+  switch(id){
+    case "inbox": an.doc.status="processing"; renderDocs(); log("Bandeja",`Recibido «${an.doc.title}» → ${flow.name}`,"io"); break;
+    case "lector": log("Lector",`${an.words.length} palabras útiles, ${an.sents.length} oraciones, ${an.tf.size} términos distintos`,"agent"); break;
+    case "extractor": log("Extractor", entSummary(an.ents)||"sin entidades reconocibles","agent"); break;
+    case "clasif": { let m=`Tipo: ${an.cls.label} (${an.cls.pct}% de confianza)`; if(an.doc.lastConf!=null) m+=` · antes ${an.doc.lastConf}%`; log("Clasificador",m,"agent"); break; }
+    case "sem": { const st=learn(an,flow); log("Cerebro semántico", st.fresh?`+${st.newTerms} términos nuevos · vocabulario ${brain.vocab.size}`:`Ya lo conocía: refuerza ${an.tf.size} términos`,"brain"); break; }
+    case "epi": { learn(an,flow); const sim=new Set(brain.events.filter(e=>e.cls===an.cls.key&&e.docId!==an.doc.id).map(e=>e.doc)).size; log("Cerebro episódico",`Episodio #${brain.events.length} guardado · recuerda ${sim} caso(s) similares`,"brain"); break; }
+    case "grafo": { const st=learn(an,flow); log("Grafo de conocimiento", st.fresh?`+${st.newEnts} entidades, +${st.newLinks} relaciones`:`${an.ents.length} entidades ya conocidas`,"brain"); break; }
+    case "analista": case "auditor": case "asesor": an.output=buildOutput(flow.id,an); log(N.label,`Elaborando ${flow.outName}`,"agent"); break;
+    default:
+      addCard(an.output); an.doc.status="done"; an.doc.lastConf=an.cls.pct; an.doc.label=an.cls.label; renderDocs();
+      log(N.label,`Entregado: ${an.output.title} de «${an.doc.title}»`,"out");
+  }
+}
+function setNow(doc,flow,i){
+  const e=document.getElementById("now");
+  if(!doc){ e.innerHTML = queue.length?`${queue.length} en cola`:"En espera"; return; }
+  e.innerHTML=`<b>${esc(doc.title)}</b> · paso ${i+1}/${flow.path.length} · ${NODES[flow.path[i]].label}`;
+}
+function askBrains(q){
+  q=q.trim(); if(!q) return;
+  let res;
+  spawn(["sem","asesor","o_resp"], "var(--f-qa)", (id)=>{
+    bump(id);
+    if(id==="sem") log("Cerebro semántico",`Buscando en ${brain.sentences.length} oraciones aprendidas`,"brain");
+    if(id==="asesor"){ res=answer(q); log("Asesor",res.n?`${res.n} fragmento(s) relevantes encontrados`:"Sin conocimiento relacionado","agent"); }
+    if(id==="o_resp"){ addCard(res.out); log("Respuestas",`Respondido: «${q}»`,"out"); }
+  });
+}
+
+/* ---------- Render ---------- */
+function clock(){ return new Date().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); }
+const logEl=document.getElementById("log");
+function log(src,msg,kind){
+  const li=document.createElement("li"); li.innerHTML=`<time>${clock()}</time><b class="k-${kind}">${esc(src)}</b><span>${esc(msg)}</span>`;
+  logEl.prepend(li); while(logEl.children.length>120) logEl.lastChild.remove();
+}
+const cardsEl=document.getElementById("cards");
+function addCard(o){
+  const d=document.createElement("article"); d.className="card"; d.style.setProperty("--c",`var(--f-${o.flow})`);
+  d.innerHTML=`<div class="card-head"><span class="t">${esc(o.title)}</span><span class="m">${esc(o.doc)} · ${o.time}</span></div><div class="card-body">${o.body}</div>`;
+  cardsEl.prepend(d); while(cardsEl.children.length>12) cardsEl.lastChild.remove();
+}
+const docListEl=document.getElementById("docList");
+function renderDocs(){
+  const lab=d=>d.status==="queued"?"En cola":d.status==="processing"?"Procesando…":d.status==="done"?`Aprendido · ${d.label} ${d.lastConf}%`:"Sin procesar";
+  docListEl.innerHTML=DOCS.map(d=>`<li class="doc ${d.status||""}"><div class="doc-main"><span class="doc-title">${esc(d.title)}</span><span class="doc-meta">${esc(d.kind)} · ${d.text.length.toLocaleString("es")} caracteres</span><span class="doc-state">${lab(d)}</span></div><button class="btn-sm" data-id="${d.id}" ${d.status==="queued"||d.status==="processing"?"disabled":""}>${d.status==="done"?"Reprocesar":"Procesar"}</button></li>`).join("");
+  document.getElementById("queueHint").textContent=`${DOCS.length} documentos`;
+}
+function renderStats(){
+  const avg = brain.curve.length? Math.round(brain.curve.slice(-5).reduce((a,c)=>a+c.pct,0)/Math.min(5,brain.curve.length)) : 0;
+  document.getElementById("sys").innerHTML=`<span class="live">Clúster <b>4 GPU</b> en línea</span><span>Carga <b id="gpuPct">12%</b></span><span><b>${brain.tokens.toLocaleString("es")}</b> tokens procesados</span><span><b>3</b> cerebros · <b>6</b> agentes</span>`;
+  document.getElementById("stats").innerHTML=[
+    [brain.docs,"documentos aprendidos"],[brain.vocab.size,"conceptos"],[brain.entities.size,"entidades"],[brain.links.size,"relaciones"],[avg+"%","confianza reciente"]
+  ].map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
+}
+function renderBrains(){
+  document.getElementById("semMeta").textContent=`${brain.vocab.size} términos`;
+  const top=[...brain.vocab.entries()].map(([s,v])=>({w:v.word,sc:v.count*idf(s)})).sort((a,b)=>b.sc-a.sc).slice(0,20);
+  const mx=top[0]?.sc||1;
+  document.getElementById("cloud").innerHTML = top.length? top.map(t=>`<span class="concept" style="--s:${(.85+.6*t.sc/mx).toFixed(2)}">${esc(t.w)}</span>`).join("") : `<span class="empty">Aún vacío</span>`;
+  // grafo
+  const cnt={}; brain.entities.forEach(e=>cnt[e.type]=(cnt[e.type]||0)+1);
+  document.getElementById("grafoMeta").textContent=`${brain.links.size} relaciones`;
+  document.getElementById("entTypes").innerHTML=["monto","fecha","persona","org","correo","porcentaje"].map(t=>`<div class="et"><b>${cnt[t]||0}</b><span>${TYPE_LABEL[t]}</span></div>`).join("");
+  const deg=new Map(); brain.links.forEach((c,k)=>k.split("~").forEach(x=>deg.set(x,(deg.get(x)||0)+1)));
+  const topE=[...deg.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById("entList").innerHTML = topE.map(([k,d])=>`<li><span>${esc(brain.entities.get(k).value)}</span><span>${d} vínculo${d>1?"s":""}</span></li>`).join("");
+  // episodios
+  document.getElementById("epiMeta").textContent=`${brain.events.length} episodios`;
+  document.getElementById("episodes").innerHTML = brain.events.length ? brain.events.slice(0,5).map(e=>`<li><span class="n">#${e.n}</span><span><i class="fdot" style="background:var(--f-${e.flow})"></i>${esc(e.doc)}</span><span class="m">${esc(e.label)} · ${e.pct}% · ${e.t}</span></li>`).join("") : `<li class="empty">Sin episodios</li>`;
+  // curva
+  const c=document.getElementById("curve"); const pts=brain.curve.slice(-16);
+  const L=26,R=276,T=6,B=78, bw=(R-L)/16;
+  let h=`<line class="grid" x1="${L}" x2="${R}" y1="${T}" y2="${T}"/><line class="grid" x1="${L}" x2="${R}" y1="${(T+B)/2}" y2="${(T+B)/2}"/><line class="grid" x1="${L}" x2="${R}" y1="${B}" y2="${B}"/>
+    <text x="${L-4}" y="${T+3}" text-anchor="end">100%</text><text x="${L-4}" y="${(T+B)/2+3}" text-anchor="end">50%</text><text x="${L-4}" y="${B+3}" text-anchor="end">0</text>`;
+  pts.forEach((p,i)=>{ const hh=(B-T)*p.pct/100; h+=`<rect class="bar" x="${(L+i*bw+2).toFixed(1)}" y="${(B-hh).toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${hh.toFixed(1)}" rx="2" opacity="${i===pts.length-1?1:.55}"><title>${esc(p.doc)}: ${p.pct}%</title></rect>`; });
+  if(!pts.length) h+=`<text x="${(L+R)/2}" y="${(T+B)/2-6}" text-anchor="middle">sin datos todavía</text>`;
+  h+=`<text x="${L}" y="92">más antiguo</text><text x="${R}" y="92" text-anchor="end">más reciente</text>`;
+  c.innerHTML=h;
+  // tamaño de los cerebros según lo aprendido
+  const grow=(o,v)=>{ const sc=1+Math.min(.26,v/45); o.body.setAttribute("transform",`scale(${sc.toFixed(3)})`); o.orbit.setAttribute("r",(44*sc).toFixed(1));
+    const lit=Math.min(o.neurons.length,2+Math.floor(v)); o.neurons.forEach((c,i)=>c.classList.toggle("on",i<lit)); };
+  grow(NG.sem, brain.vocab.size/14); grow(NG.epi, brain.events.length*1.2); grow(NG.grafo, brain.entities.size/2.5);
+}
+
+/* ---------- Controles ---------- */
+const flowsEl=document.getElementById("flows");
+flowsEl.innerHTML=FLOWS.map(f=>`<button class="flow-btn" role="radio" data-id="${f.id}" style="--c:var(--f-${f.id})" aria-checked="false">${f.name}</button>`).join("");
+flowsEl.addEventListener("click",e=>{ const b=e.target.closest(".flow-btn"); if(!b) return; currentFlow=b.dataset.id; paintFlow(); });
+docListEl.addEventListener("click",e=>{ const b=e.target.closest("button[data-id]"); if(!b) return; enqueue(DOCS.find(d=>d.id===b.dataset.id)); });
+document.getElementById("runAll").addEventListener("click",()=>DOCS.forEach(d=>enqueue(d)));
+document.getElementById("reset").addEventListener("click",()=>{
+  queue.length=0; resetBrain(); DOCS.forEach(d=>{ if(d.status!=="processing"){ d.status=null; d.lastConf=null; } });
+  for(const id in NG){ NG[id].n=0; NG[id].badge.style.display="none"; }
+  cardsEl.innerHTML=""; renderDocs(); renderBrains(); renderStats(); log("Sistema","Cerebros reiniciados: vocabulario, grafo, episodios y clasificador vuelven a cero","io");
+});
+function addDoc(title,text,kind){ const d={id:"u"+Date.now()+Math.random().toString(36).slice(2,6), title, kind, text:text.slice(0,20000)}; DOCS.push(d); renderDocs(); log("Bandeja",`Documento añadido: «${title}»`,"io"); return d; }
+document.getElementById("file").addEventListener("change",e=>{
+  [...e.target.files].forEach(f=>{ const r=new FileReader(); r.onload=()=>addDoc(f.name, String(r.result), "Archivo subido"); r.readAsText(f); });
+  e.target.value="";
+});
+document.getElementById("pasteAdd").addEventListener("click",()=>{
+  const t=document.getElementById("pasteText"), ti=document.getElementById("pasteTitle");
+  if(t.value.trim().length<20){ t.focus(); t.placeholder="Escribe al menos una o dos frases para que los agentes tengan algo que leer."; return; }
+  addDoc(ti.value.trim()||"Texto pegado", t.value, "Texto pegado"); t.value=""; ti.value="";
+});
+document.getElementById("askForm").addEventListener("submit",e=>{ e.preventDefault(); const q=document.getElementById("q"); askBrains(q.value); q.value=""; });
+const SUGG=["¿Cuánto hay que pagar en total?","¿Cuándo empieza la vigencia del contrato?","¿Quién es responsable del seguimiento?","¿Qué experiencia tiene la candidata?","¿Qué error reporta el cliente?"];
+document.getElementById("sugg").innerHTML=SUGG.map(s=>`<button type="button">${esc(s)}</button>`).join("");
+document.getElementById("sugg").addEventListener("click",e=>{ if(e.target.tagName==="BUTTON") askBrains(e.target.textContent); });
+
+/* ---------- Arranque: estado de trabajo realista ---------- */
+resetBrain(); renderDocs(); renderBrains(); renderStats(); paintFlow();
+function runInstant(doc, flowId){ const f=FLOW[flowId], an=analyze(doc); f.path.forEach(id=>handleNode(id,an,f)); }
+log("Sistema","Precarga de ejemplo: dos documentos ya procesados para que los cerebros tengan memoria","io");
+runInstant(DOCS[0],"montos");
+runInstant(DOCS[1],"riesgo");
+setTimeout(()=>enqueue(DOCS[4],"resumen"), 700);
+</script>
+
+</body></html>

@@ -10,17 +10,15 @@ import { cn } from "@/utils/cn";
 const links = [
   { href: "/", label: "Inicio" },
   { href: "/#automatizacion", label: "Plataformas" },
-  { href: "/automatizacion-inteligente", label: "Automatización inteligente" },
+  { href: "/automatizacion-inteligente", label: "Automatización inteligente", standalone: true },
+  { href: "/laboratorio-sinapsis", label: "Laboratorio Sinapsis", standalone: true },
+  { href: "/nexo-centro-de-datos", label: "Nexo Centro de Datos", standalone: true },
   { href: "/tasks", label: "Tasks" },
 ];
 
 function isLinkActive(href: string, pathname: string, hash: string) {
-  if (href === "/automatizacion-inteligente") {
-    return pathname === "/automatizacion-inteligente";
-  }
-
-  if (href === "/#automatizacion") {
-    return pathname === "/" && hash === "#automatizacion";
+  if (href.startsWith("/#")) {
+    return pathname === "/" && hash === href.slice(1);
   }
 
   if (href === "/") {
@@ -52,19 +50,17 @@ export function MainNav() {
           .filter((link) => (link.href === "/tasks" ? experimentalTasks : true))
           .map((link) => {
             const active = isLinkActive(link.href, pathname, hash);
-            const isExternalPage = link.href === "/automatizacion-inteligente";
-
             const className = cn(
               "inline-flex rounded-full border px-3.5 py-1.5 font-medium transition-colors",
               active
                 ? "border-cyan-400/50 bg-cyan-400/15 text-cyan-200"
                 : "border-transparent bg-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white",
-              isExternalPage && !active && "border-white/10 text-cyan-100",
+              link.standalone && !active && "border-white/10 text-cyan-100",
             );
 
             return (
               <li key={link.href}>
-                {isExternalPage ? (
+                {link.standalone ? (
                   <a href={link.href} className={className}>
                     {link.label}
                   </a>
